@@ -39,6 +39,10 @@ public class PacketCapturer implements PcapPacketHandler<String> {
         List<PcapIf> pcapIfs = new ArrayList<>();
         StringBuilder errBuf = new StringBuilder();
         Pcap.findAllDevs(pcapIfs, errBuf);
+        if (pcapIfs.isEmpty()) {
+            System.err.printf("Can't read list of devices, error is %s\n", errBuf.toString());
+            return;
+        }
         for (PcapIf pcapIf: pcapIfs) {
             System.out.println(pcapIf.toString());
         }
@@ -49,7 +53,10 @@ public class PacketCapturer implements PcapPacketHandler<String> {
         int flags = Pcap.MODE_PROMISCUOUS;
         int timeout = 10 * 1000;
         Pcap pcap = Pcap.openLive(dev.getName(), snaplen, flags, timeout, errBuf);
-
+        if (pcap == null) {
+            System.err.printf("Error while opening device for capture: %s\n", errBuf.toString());
+            return;
+        }
         pcap.loop(5 * 1000, new PacketCapturer(), "123");
 
         pcap.close();
