@@ -1,3 +1,4 @@
+import org.bson.Document;
 import org.jnetpcap.packet.JPacket;
 import org.jnetpcap.packet.format.FormatUtils;
 import org.jnetpcap.protocol.lan.Ethernet;
@@ -13,8 +14,10 @@ import java.util.Date;
  * PacketMatcher 类
  * Created by BarryGates on 2016/5/10.
  */
-public class PacketMatcher {
+class PacketMatcher {
 
+    private Store store;
+    private Document doc;
     private static PacketMatcher pm;
     private Ethernet ethernet = new Ethernet();
     private Ip4 ip = new Ip4();
@@ -23,18 +26,26 @@ public class PacketMatcher {
     private Udp udp = new Udp();
     private Icmp icmp = new Icmp();
 
-    public static PacketMatcher getInstance() {
+    static PacketMatcher getInstance() {
         if (pm == null) {
             pm = new PacketMatcher();
         }
         return pm;
     }
 
-    public void handlePacket(JPacket packet) {
+    private PacketMatcher() {
+        store = Store.getInstance();
+    }
+
+    void handlePacket(JPacket packet) {
+
         System.out.printf("\nReceived packet at %s caplen=%-4d len=%-4d\n",
                 new Date(packet.getCaptureHeader().timestampInMillis()),
                 packet.getCaptureHeader().caplen(),
                 packet.getCaptureHeader().wirelen());
+        doc = new Document("timestamp", packet.getCaptureHeader().timestampInMillis())
+                .append("caplen", packet.getCaptureHeader().caplen())
+                .append("wirelen", packet.getCaptureHeader().wirelen());
         if (packet.hasHeader(ethernet)) {
             ethernetHandler(ethernet);
         }
@@ -53,6 +64,7 @@ public class PacketMatcher {
         else if (packet.hasHeader(tcp)) {
             tcpHandler(tcp);
         }
+        store.storeOneRecord(doc);
     }
 
     private void ethernetHandler(Ethernet ethernet) {
@@ -61,6 +73,10 @@ public class PacketMatcher {
         int length = ethernet.getLength();
         int offset = ethernet.getOffset();
         System.out.println("ETHERNET: " + srcMac + " -> " + dstMac + " " + length + " " + offset);
+        doc.append("ethernet", new Document("src", srcMac)
+                    .append("dst", dstMac)
+                    .append("length", length)
+                    .append("offset", offset));
     }
 
     private void ip4Handler(Ip4 ip) {
@@ -70,6 +86,10 @@ public class PacketMatcher {
         int length = ip.length();
         int ttl = ip.ttl();
         System.out.println("IP: " + srcIp + " " + dstIp + " " + type + " " + length + " " + ttl);
+        doc.append("ip", new Document("src", srcIp)
+                .append("dst", dstIp)
+                .append("length", length)
+                .append("offset", ttl));
     }
 
     private void arpHandler(Arp arp) {
@@ -79,11 +99,17 @@ public class PacketMatcher {
         String dstMac = FormatUtils.mac(arp.tha());
         String dstIp = FormatUtils.ip(arp.tpa());
         System.out.printf("ARP: %d   %s %s %s %s\n", operation, srcMac, srcIp, dstMac, dstIp);
+        doc.append("arp", new Document("srcMac", srcMac)
+                .append("srcIp", srcIp)
+                .append("dstMac", dstMac)
+                .append("dstIp", dstIp));
     }
     private void icmpHandler(Icmp icmp) {
         int type = icmp.type();
         int code = icmp.code();
         System.out.printf("ICMP: type: %d code: %d\n", type, code);
+        doc.append("icmp", new Document("type", type)
+                .append("code", code));
     }
 
     private void tcpHandler(Tcp tcp) {
@@ -94,6 +120,12 @@ public class PacketMatcher {
         boolean syn = tcp.flags_SYN();
         boolean fin = tcp.flags_FIN();
         System.out.printf("TCP: %s -> %s %b %b %b %b\n", srcPort, dstPort, ack, rst, syn, fin);
+        doc.append("tcp", new Document("src", srcPort)
+                .append("dst", dstPort)
+                .append("ack", ack)
+                .append("rst", rst)
+                .append("syn", syn)
+                .append("fin", fin));
     }
 
     private void udpHandler(Udp udp) {
@@ -101,5 +133,8 @@ public class PacketMatcher {
         String dstPort = String.valueOf(udp.destination());
         int length = udp.length();
         System.out.printf("UDP: len: %d %s -> %s\n", length, srcPort, dstPort);
+        doc.append("tcp", new Document("src", srcPort)
+                .append("dst", dstPort)
+                .append("length", length));
     }
 }
