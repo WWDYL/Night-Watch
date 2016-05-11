@@ -1,11 +1,9 @@
 import org.jnetpcap.Pcap;
 import org.jnetpcap.PcapIf;
-import org.jnetpcap.nio.JBuffer;
 import org.jnetpcap.packet.PcapPacket;
 import org.jnetpcap.packet.PcapPacketHandler;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
