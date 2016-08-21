@@ -1,3 +1,5 @@
+package cn.turingmoon;
+
 import org.jnetpcap.Pcap;
 import org.jnetpcap.PcapIf;
 import org.jnetpcap.packet.PcapPacket;
@@ -6,21 +8,15 @@ import org.jnetpcap.packet.PcapPacketHandler;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by BarryGates on 2016/4/25.
- *
- */
-
 public class PacketCapturer implements PcapPacketHandler<String> {
 
     public void nextPacket(PcapPacket packet, String user) {
         PacketMatcher packetMatcher = PacketMatcher.getInstance();
         packetMatcher.handlePacket(packet);
-
     }
 
     public static void main(String[] args) {
-        List<PcapIf> pcapIfs = new ArrayList<>();
+        List<PcapIf> pcapIfs = new ArrayList<PcapIf>();
         StringBuilder errBuf = new StringBuilder();
         Pcap.findAllDevs(pcapIfs, errBuf);
         if (pcapIfs.isEmpty()) {
@@ -31,7 +27,7 @@ public class PacketCapturer implements PcapPacketHandler<String> {
             System.out.println(pcapIf.toString());
         }
 
-        PcapIf dev = pcapIfs.get(1);
+        PcapIf dev = pcapIfs.get(0);
 
         int snaplen = 64 * 1024;
         int flags = Pcap.MODE_PROMISCUOUS;

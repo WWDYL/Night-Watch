@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="jnetpcap-1.4">
     <CLASSES>
-      <root url="file://D:/jnetpcap-1.4.r1425-1.win64/jnetpcap-1.4.r1425" />
+      <root url="file://$PROJECT_DIR$/lib/jnetpcap-1.4.r1425" />
     </CLASSES>
     <JAVADOC />
     <NATIVE>
-      <root url="file://D:/jnetpcap-1.4.r1425-1.win64/jnetpcap-1.4.r1425" />
+      <root url="file://$PROJECT_DIR$/lib/jnetpcap-1.4.r1425" />
     </NATIVE>
     <SOURCES />
-    <jarDirectory url="file://D:/jnetpcap-1.4.r1425-1.win64/jnetpcap-1.4.r1425" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/jnetpcap-1.4.r1425" recursive="false" />
   </library>
 </component>

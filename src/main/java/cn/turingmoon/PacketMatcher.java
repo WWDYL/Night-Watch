@@ -1,3 +1,6 @@
+package cn.turingmoon;
+
+import cn.turingmoon.utilities.MongoDbUtils;
 import org.bson.Document;
 import org.jnetpcap.packet.JPacket;
 import org.jnetpcap.packet.format.FormatUtils;
@@ -8,15 +11,17 @@ import org.jnetpcap.protocol.network.Ip4;
 import org.jnetpcap.protocol.tcpip.Tcp;
 import org.jnetpcap.protocol.tcpip.Udp;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * PacketMatcher 类
- * Created by BarryGates on 2016/5/10.
+ * cn.turingmoon.PacketMatcher 类
+ * Created by Deng Li on 2016/5/10.
  */
+
 class PacketMatcher {
 
-    private Store store;
+    private MongoDbUtils mongoDbUtils;
     private Document doc;
     private static PacketMatcher pm;
     private Ethernet ethernet = new Ethernet();
@@ -34,7 +39,7 @@ class PacketMatcher {
     }
 
     private PacketMatcher() {
-        store = Store.getInstance();
+        mongoDbUtils = MongoDbUtils.getInstance();
     }
 
     void handlePacket(JPacket packet) {
@@ -43,7 +48,8 @@ class PacketMatcher {
                 new Date(packet.getCaptureHeader().timestampInMillis()),
                 packet.getCaptureHeader().caplen(),
                 packet.getCaptureHeader().wirelen());
-        doc = new Document("timestamp", packet.getCaptureHeader().timestampInMillis())
+        doc = new Document("timestamp", new SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
+                .format(packet.getCaptureHeader().timestampInMillis()))
                 .append("caplen", packet.getCaptureHeader().caplen())
                 .append("wirelen", packet.getCaptureHeader().wirelen());
         if (packet.hasHeader(ethernet)) {
@@ -64,7 +70,7 @@ class PacketMatcher {
         else if (packet.hasHeader(tcp)) {
             tcpHandler(tcp);
         }
-        store.storeOneRecord(doc);
+        mongoDbUtils.storeOneRecord(doc);
     }
 
     private void ethernetHandler(Ethernet ethernet) {
@@ -104,6 +110,7 @@ class PacketMatcher {
                 .append("dstMac", dstMac)
                 .append("dstIp", dstIp));
     }
+
     private void icmpHandler(Icmp icmp) {
         int type = icmp.type();
         int code = icmp.code();
@@ -133,7 +140,7 @@ class PacketMatcher {
         String dstPort = String.valueOf(udp.destination());
         int length = udp.length();
         System.out.printf("UDP: len: %d %s -> %s\n", length, srcPort, dstPort);
-        doc.append("tcp", new Document("src", srcPort)
+        doc.append("udp", new Document("src", srcPort)
                 .append("dst", dstPort)
                 .append("length", length));
     }
