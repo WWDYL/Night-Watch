@@ -11,11 +11,11 @@ import java.util.List;
 public class PacketCapturer implements PcapPacketHandler<String> {
 
     public void nextPacket(PcapPacket packet, String user) {
-        PacketMatcher packetMatcher = PacketMatcher.getInstance();
-        packetMatcher.handlePacket(packet);
+        FlowGenerator generator = new FlowGenerator();
+        generator.handlePacket(packet);
     }
 
-    public static void main(String[] args) {
+    public void start() {
         List<PcapIf> pcapIfs = new ArrayList<PcapIf>();
         StringBuilder errBuf = new StringBuilder();
         Pcap.findAllDevs(pcapIfs, errBuf);
@@ -23,11 +23,11 @@ public class PacketCapturer implements PcapPacketHandler<String> {
             System.err.printf("Can't read list of devices, error is %s\n", errBuf.toString());
             return;
         }
-        for (PcapIf pcapIf: pcapIfs) {
+        for (PcapIf pcapIf : pcapIfs) {
             System.out.println(pcapIf.toString());
         }
 
-        PcapIf dev = pcapIfs.get(0);
+        PcapIf dev = pcapIfs.get(1);
 
         int snaplen = 64 * 1024;
         int flags = Pcap.MODE_PROMISCUOUS;
@@ -37,8 +37,8 @@ public class PacketCapturer implements PcapPacketHandler<String> {
             System.err.printf("Error while opening device for capture: %s\n", errBuf.toString());
             return;
         }
-        pcap.loop(5 * 1000, new PacketCapturer(), null);
 
+        pcap.loop(-1, new PacketCapturer(), null);
         pcap.close();
     }
 }

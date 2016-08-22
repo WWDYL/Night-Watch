@@ -8,15 +8,11 @@ import org.bson.Document;
 import java.util.ArrayList;
 import java.util.List;
 
-
-/**
- * cn.turingmoon.utilities.MongoDbUtils 类
- * Created by jiany on 2016/5/11.
- */
 public class MongoDbUtils {
     private static MongoDbUtils mongoDbUtils;
 
     private MongoCollection<Document> traffic;
+    private MongoCollection<Document> flows;
 
     public static MongoDbUtils getInstance() {
         if (mongoDbUtils == null) {
@@ -30,6 +26,7 @@ public class MongoDbUtils {
         MongoDatabase mongoDatabase = mongoClient.getDatabase("mydb");
 
         traffic = mongoDatabase.getCollection("traffic");
+        flows = mongoDatabase.getCollection("flows");
     }
 
     public void storeOneRecord(Document doc) {
@@ -37,7 +34,7 @@ public class MongoDbUtils {
     }
 
     public void storeSomeRecord(List<Document> docs) {
-        traffic.insertMany(docs);
+        flows.insertMany(docs);
     }
 
     public List<Document> getTrafficRecords() {

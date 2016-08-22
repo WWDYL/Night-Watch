@@ -13,6 +13,19 @@ public class Flow {
     private int pNum;
     private int pSize;
 
+    public boolean equals(Object o) {
+        if (!(o instanceof Flow)) {
+            return false;
+        }
+        Flow right = (Flow) o;
+        return getsIP().equals(right.getsIP())
+                && getdIP().equals(right.getdIP())
+                && getsPort().equals(right.getsPort())
+                && getdPort().equals(right.getdPort())
+                && getType().equals(right.getType());
+
+    }
+
     public Date getbTime() {
         return bTime;
     }
