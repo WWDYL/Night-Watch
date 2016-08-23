@@ -1,5 +1,6 @@
-package cn.turingmoon;
+package cn.turingmoon.generators;
 
+import cn.turingmoon.LocalStorage;
 import cn.turingmoon.models.Flow;
 import cn.turingmoon.utilities.MongoDbUtils;
 import org.bson.Document;

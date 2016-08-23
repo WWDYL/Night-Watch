@@ -2,13 +2,17 @@ package cn.turingmoon.utilities;
 
 import redis.clients.jedis.Jedis;
 
-/**
- * cn.turingmoon.utilities.RedisUtils 连接Redis
- * Created by Deng Li on 2016/8/20.
- */
-
 public class RedisUtils {
+    private static RedisUtils utils = null;
+
     private Jedis jedis = null;
+
+    public static RedisUtils getInstance() {
+        if (utils == null) {
+            utils = new RedisUtils();
+        }
+        return utils;
+    }
 
     RedisUtils() {
         jedis = new Jedis("localhost");

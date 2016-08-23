@@ -1,4 +1,4 @@
-package cn.turingmoon;
+package cn.turingmoon.generators;
 
 import org.jnetpcap.Pcap;
 import org.jnetpcap.PcapIf;

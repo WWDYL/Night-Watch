@@ -1,9 +1,8 @@
-package cn.turingmoon;
+package cn.turingmoon.generators;
 
+import cn.turingmoon.LocalStorage;
 import cn.turingmoon.models.Flow;
 import cn.turingmoon.utilities.MongoDbUtils;
-import org.bson.Document;
-import org.bson.codecs.IntegerCodec;
 import org.jnetpcap.packet.JPacket;
 import org.jnetpcap.packet.format.FormatUtils;
 import org.jnetpcap.protocol.network.Icmp;

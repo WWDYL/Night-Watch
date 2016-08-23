@@ -1,4 +1,4 @@
-package cn.turingmoon;
+package cn.turingmoon.generators;
 
 public class Main {
     private static void parse_command_line() {

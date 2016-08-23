@@ -1,6 +1,7 @@
 package cn.turingmoon.utilities;
 
 import com.mongodb.MongoClient;
+import com.mongodb.client.DistinctIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
@@ -40,6 +41,11 @@ public class MongoDbUtils {
     public List<Document> getTrafficRecords() {
         List<Document> doc = traffic.find().into(new ArrayList<Document>());
         return doc;
+    }
+
+    public DistinctIterable<String> getDistinctValues(String col) {
+        DistinctIterable<String> res = flows.distinct(col, String.class);
+        return res;
     }
 
     long getCount() {
