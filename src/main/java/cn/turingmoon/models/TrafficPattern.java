@@ -1,13 +1,15 @@
 package cn.turingmoon.models;
 
 
+import cn.turingmoon.constants.FlowType;
+
 public class TrafficPattern {
     private int Flow_num;
     private int SrcIP_num;
     private int DstIP_num;
     private int SrcPort_num;
     private int DstPort_num;
-    private String Proto;
+    private FlowType Proto;
     private int Flow_size_sum;
     private float Flow_size_avr;
     private float Flow_size_dev;
@@ -57,11 +59,11 @@ public class TrafficPattern {
         DstPort_num = dstPort_num;
     }
 
-    public String getProto() {
+    public FlowType getProto() {
         return Proto;
     }
 
-    public void setProto(String proto) {
+    public void setProto(FlowType proto) {
         Proto = proto;
     }
 

@@ -5,6 +5,7 @@ import com.mongodb.client.DistinctIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,8 +39,8 @@ public class MongoDbUtils {
         flows.insertMany(docs);
     }
 
-    public List<Document> getTrafficRecords() {
-        List<Document> doc = traffic.find().into(new ArrayList<Document>());
+    public List<Document> getFlowRecords(Bson query) {
+        List<Document> doc = traffic.find(query).into(new ArrayList<Document>());
         return doc;
     }
 
