@@ -121,8 +121,4 @@ public class TrafficPatternDataGenerator {
         }
     }
 
-    public static void main(String[] args) {
-        TrafficPatternDataGenerator generator = new TrafficPatternDataGenerator();
-        generator.run();
-    }
 }

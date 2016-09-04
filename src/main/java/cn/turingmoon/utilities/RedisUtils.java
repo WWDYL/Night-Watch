@@ -21,6 +21,10 @@ public class RedisUtils {
         }
     }
 
+    public Jedis getJedis() {
+        return jedis;
+    }
+
     public static void main(String[] args) {
         RedisUtils utils = new RedisUtils();
     }

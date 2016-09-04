@@ -1,5 +1,7 @@
 package cn.turingmoon;
 
+import cn.turingmoon.generators.FlowStore;
+import cn.turingmoon.generators.PacketCapturer;
 import org.apache.commons.cli.*;
 
 import java.io.BufferedInputStream;
@@ -29,27 +31,40 @@ public class Cli {
                 return;
             }
 
-            String filename = cl.getOptionValue("server");
-            System.out.println(filename);
+            String filename = cl.getOptionValue("file");
 
-            Runtime run = Runtime.getRuntime();
-            try {
-                Process p = run.exec("ping baidu.com");
-                BufferedInputStream in = new BufferedInputStream(p.getInputStream());
-                BufferedReader inBr = new BufferedReader(new InputStreamReader(in));
-                String lineStr;
-                while ((lineStr = inBr.readLine()) != null)
-                    //获得命令执行后在控制台的输出信息
-                    System.out.println(lineStr);// 打印输出信息
-                //检查命令是否执行失败。
-                if (p.waitFor() != 0) {
-                    if (p.exitValue() == 1)//p.exitValue()==0表示正常结束，1：非正常结束
-                        System.err.println("命令执行失败!");
+            new Thread(new Runnable() {
+                public void run() {
+                    PacketCapturer capturer = new PacketCapturer();
+                    capturer.start();
                 }
-                inBr.close();
-                in.close();
-            } catch (Exception e) {
-                e.printStackTrace();
+            }).start();
+            FlowStore store = new FlowStore();
+            store.run();
+
+
+
+            if (cl.hasOption("s")) {
+                Runtime run = Runtime.getRuntime();
+                try {
+                    Process p = run.exec("node.exe webserver\\bin\\www");
+                    BufferedInputStream in = new BufferedInputStream(p.getInputStream());
+                    BufferedReader inBr = new BufferedReader(new InputStreamReader(in));
+                    String lineStr;
+                    while ((lineStr = inBr.readLine()) != null)
+                        //获得命令执行后在控制台的输出信息
+                        System.out.println(lineStr);// 打印输出信息
+                    //检查命令是否执行失败。
+                    if (p.waitFor() != 0) {
+                        if (p.exitValue() == 1)//p.exitValue()==0表示正常结束，1：非正常结束
+                            System.err.println("命令执行失败!");
+                    }
+                    inBr.close();
+                    in.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }
 
         } catch (ParseException e) {

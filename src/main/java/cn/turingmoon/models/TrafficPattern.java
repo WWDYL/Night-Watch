@@ -2,6 +2,9 @@ package cn.turingmoon.models;
 
 
 import cn.turingmoon.constants.FlowType;
+import org.bson.Document;
+
+import java.awt.font.TransformAttribute;
 
 public class TrafficPattern {
     private int Flow_num;
@@ -129,5 +132,15 @@ public class TrafficPattern {
 
     public void setACK_num(int ACK_num) {
         this.ACK_num = ACK_num;
+    }
+
+    public static TrafficPattern parseDocument(Document document) {
+        // TODO: implement this.
+        return null;
+    }
+
+    public static Document toDocument(TrafficPattern pattern) {
+        // TODO: implement this.
+        return null;
     }
 }

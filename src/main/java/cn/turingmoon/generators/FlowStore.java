@@ -15,7 +15,7 @@ public class FlowStore {
 
     private ScheduledExecutorService scheduExec;
 
-    FlowStore() {
+    public FlowStore() {
         this.scheduExec = Executors.newScheduledThreadPool(2);
     }
 

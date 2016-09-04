@@ -1,0 +1,162 @@
+doctype html
+html
+  head
+    title 网络异常流量检测系统
+    meta(http-equiv='Content-Type', content='text/html;charset=utf-8')
+    link( rel="icon",href="/images/icon.jpg",type="image/x-icon")
+    link(href='bootstrap/css/bootstrap.min.css', rel='stylesheet', media='screen')
+    link(href='bootstrap/css/bootstrap-responsive.min.css', rel='stylesheet', media='screen')
+    link(href='assets/styles.css', rel='stylesheet', media='screen')
+    //if lte IE 8
+      script(language='javascript', type='text/javascript', src='vendors/flot/excanvas.min.js')
+    // HTML5 shim, for IE6-8 support of HTML5 elements
+    //if lt IE 9
+      script(src='http://html5shim.googlecode.com/svn/trunk/html5.js')
+    script(src='vendors/modernizr-2.6.2-respond-1.1.0.min.js')
+    script(src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js')
+    script(src='http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.2/raphael-min.js')
+    script(src='morris/morris.js')
+    script(src='http://cdnjs.cloudflare.com/ajax/libs/prettify/r224/prettify.min.js')
+    script(src='morris/example.js')
+    link(rel='stylesheet', href='http://cdnjs.cloudflare.com/ajax/libs/prettify/r224/prettify.min.css')
+    link(rel='stylesheet', href='morris/morris.css')
+  body
+    .navbar.navbar-fixed-top
+      .navbar-inner
+        .container-fluid
+          a.btn.btn-navbar(data-toggle='collapse', data-target='.nav-collapse')
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.brand(href='#') 网络异常流量检测系统
+    .container-fluid
+      .row-fluid
+        #sidebar.span2
+          ul.nav.nav-list.bs-docs-sidenav.nav-collapse.collapse
+            li
+              a(href='#')
+                i.icon-chevron-right
+                |  首页
+            li.active
+              a(href='tables')
+                i.icon-chevron-right
+                |  统计表
+            li
+              a(href='length')
+                i.icon-chevron-right
+                |  caplen
+            li
+              a(href='number')
+                i.icon-chevron-right
+                |  wirelen
+            li
+              a(href='number_of_bytes')
+                i.icon-chevron-right
+                |  ethernet.src
+        // /span
+        #content.span10
+          .row-fluid
+            .alert.alert-success
+              button.close(type='button', data-dismiss='alert') &times;
+              h4 &#x6B22;&#x8FCE;&#x4F7F;&#x7528;&#x7F51;&#x7EDC;&#x5F02;&#x5E38;&#x6D41;&#x91CF;&#x5F02;&#x5E38;&#x5206;&#x6790;&#x7F51;&#x9875;
+              |           &#x611F;&#x8C22;&#x60A8;&#x6210;&#x529F;&#x767B;&#x9646;&#x6211;&#x4EEC;&#x7684;&#x7F51;&#x5740;
+            .navbar
+              .navbar-inner
+                ul.breadcrumb
+                  i.icon-chevron-left.hide-sidebar
+                    a(href='#', title='Hide Sidebar', rel='tooltip') &nbsp;
+                  i.icon-chevron-right.show-sidebar(style='display:none;')
+                    a(href='#', title='Show Sidebar', rel='tooltip') &nbsp;
+                  li
+                    a(href='index.html') &#x9996;&#x9875;
+          .row-fluid
+            // block
+            .block
+              .navbar.navbar-inner.block-header
+                .muted.pull-left Welcome!
+              .block-content.collapse.in
+                .span3
+                  #graph1
+                  script.
+                    Morris.Donut({
+                    element: 'graph1',
+                    data: [
+                    {value: 100, label: 'WireShark'}
+                    ],
+                    backgroundColor: '#ccc',
+                    labelColor: '#060',
+                    colors: [
+                    '#0BA462'
+                    ],
+                    //                  formatter: function (x) { return x + "%"}
+                    });
+                .span3
+                  #graph2
+                  script.
+                    Morris.Donut({
+                    element: 'graph2',
+                    data: [
+                    {value: 80, label: '流量统计'},
+                    {value: 20, label: '流量统计' }
+                    ],
+                    backgroundColor: '#ccc',
+                    labelColor: '#060',
+                    colors: [
+                    '#0BA462',
+                    '#39B580'
+                    ],
+                    //                  formatter: function (x) { return x + "%"}
+                    });
+                .span3
+                  #graph3
+                  script.
+                    Morris.Donut({
+                    element: 'graph3',
+                    data: [
+                    {value: 60, label: '流量分析'},
+                    {value: 30, label: '流量分析'},
+                    {value: 10, label: '流量分析'}
+                    ],
+                    backgroundColor: '#ccc',
+                    labelColor: '#060',
+                    colors: [
+                    '#0BA462',
+                    '#39B580',
+                    '#67C69D',
+                    ],
+                    //                  formatter: function (x) { return x + "%"}
+                    });
+                .span3
+                  #graph4
+                  script.
+                    Morris.Donut({
+                    element: 'graph4',
+                    data: [
+                    {value: 40, label: '异常流量检测'},
+                    {value: 30, label: '异常流量检测'},
+                    {value: 20, label: '异常流量检测'},
+                    {value: 10, label: '异常流量检测'}
+                    ],
+                    backgroundColor: '#ccc',
+                    labelColor: '#060',
+                    colors: [
+                    '#0BA462'
+                    ],
+                    //                  formatter: function (x) { return x + "%"}
+                    });
+            // /block
+    // /.fluid-container
+    link(rel='stylesheet', href='vendors/morris/morris.css')
+    script(src='vendors/jquery-1.9.1.min.js')
+    script(src='vendors/jquery.knob.js')
+    script(src='vendors/raphael-min.js')
+    script(src='vendors/morris/morris.js')
+    script(src='bootstrap/js/bootstrap.min.js')
+    script(src='vendors/flot/jquery.flot.js')
+    script(src='vendors/flot/jquery.flot.categories.js')
+    script(src='vendors/flot/jquery.flot.pie.js')
+    script(src='vendors/flot/jquery.flot.time.js')
+    script(src='vendors/flot/jquery.flot.stack.js')
+    script(src='vendors/flot/jquery.flot.resize.js')
+    script(src='assets/scripts.js')
+    script.

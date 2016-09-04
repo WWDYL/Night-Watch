@@ -1,5 +1,7 @@
 package cn.turingmoon.models;
 
+import org.bson.Document;
+
 import java.util.Date;
 
 public class Flow {
@@ -96,5 +98,15 @@ public class Flow {
 
     public void setpSize(int pSize) {
         this.pSize = pSize;
+    }
+
+    public static Flow parseDocument(Document document) {
+        // TODO: implement this.
+        return null;
+    }
+
+    public static Document toDocument(Flow flow) {
+        // TODO: implement this.
+        return null;
     }
 }

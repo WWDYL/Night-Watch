@@ -1,11 +1,27 @@
 package cn.turingmoon.detectors;
 
+import cn.turingmoon.LocalStorage;
 import cn.turingmoon.constants.AttackType;
 import cn.turingmoon.constants.FlowType;
 import cn.turingmoon.models.Flow;
+import cn.turingmoon.utilities.MongoDbUtils;
 import cn.turingmoon.utilities.RedisUtils;
+import org.bson.Document;
+import redis.clients.jedis.Jedis;
+
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class FlowHeaderDetector {
+
+    private ScheduledExecutorService scheduExec;
+
+    public FlowHeaderDetector() {
+        scheduExec = Executors.newScheduledThreadPool(2);
+    }
+
     private boolean isSmall(int num) {
         /* TODO: implement this function. */
         return false;
@@ -27,7 +43,10 @@ public class FlowHeaderDetector {
 
     private void recordAttackType(Flow flow, AttackType type) {
         RedisUtils utils = RedisUtils.getInstance();
-
+        Jedis jedis = utils.getJedis();
+        Long id = jedis.incr("attack:");
+        String attack_id = "attack:" + id;
+        jedis.hset(attack_id, "Type", type.name());
     }
 
     private void detect(Flow flow) {
@@ -66,7 +85,13 @@ public class FlowHeaderDetector {
     }
 
     public void run() {
-
+        scheduExec.scheduleWithFixedDelay(new Runnable() {
+            public void run() {
+                MongoDbUtils utils = MongoDbUtils.getInstance();
+                List<Document> flows = utils.getFlowRecords(new Document());
+                // TODO: add detect loop
+            }
+        }, 60000, 60000, TimeUnit.MILLISECONDS);
     }
 
 }

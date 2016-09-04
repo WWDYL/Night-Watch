@@ -1,0 +1,25 @@
+{
+  "data": [
+    {
+      "id" : "1",
+      "source" : "192.255.255.177",
+      "destination" : "102.177.198.23",
+      "length" : "http",
+      "number of bytes" : "2011"
+    },
+    {
+      "id" : "2",
+      "source" : "133.255.255.177",
+      "destination" : "102.177.198.23",
+      "length" : "ssh",
+      "number of bytes" : "2011"
+    },
+    {
+      "id" : "3",
+      "source" : "111.255.255.177",
+      "destination" : "102.177.198.23",
+      "length" : "http",
+      "number of bytes" : "2011"
+    }
+  ]
+}
