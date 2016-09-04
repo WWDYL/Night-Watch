@@ -8,11 +8,17 @@ html(lang='zh-CN')
         meta(name='description', content='')
         meta(name='author', content='')
         link(rel='icon', href='../../favicon.ico')
-        title Dashboard Template for Bootstrap
+        title 网络异常流量分析
         // Bootstrap core CSS
         link(href='bootstrap/css/bootstrap.min.css', rel='stylesheet')
         // Custom styles for this template
         link(href='stylesheets/dashboard.css', rel='stylesheet')
+        link(href='assets/DT_bootstrap.css', rel='stylesheet', media='screen')
+        link(href='bootstrap/css/bootstrap-responsive.min.css', rel='stylesheet', media='screen')
+        //link(href='/bootstrap/css/bootstrap.min.css', rel='stylesheet', media='screen')
+          //  link(href='assets/styles.css', rel='stylesheet', media='screen')
+
+
         // HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries
         //if lt IE 9
           script(src='//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js')
@@ -35,7 +41,7 @@ html(lang='zh-CN')
                             ul.nav.nav-stacked.of
                                 li.tq Dashboards
                                 li.active
-                                    a(href="1") 1
+                                    a(href="dashboard.html") tables
                                 li
                                     a(href="1") 2
                                 li
@@ -46,7 +52,7 @@ html(lang='zh-CN')
                     .apa
                         .apb
                             h6.apd Dashboards
-                            h2.apc Overview
+                            h2.apc 网络异常流量检测
                         .ob.ape
                             .tn.aol
                                 input.form-control(type="text", value="01/01/15 - 12/31/15", data-provide="datepicker")
@@ -54,7 +60,7 @@ html(lang='zh-CN')
                     .row.placeholders
                         .col-xs-6.col-sm-3.placeholder
                             img.img-responsive(data-src='holder.js/200x200/auto/sky', alt='Generic placeholder thumbnail')
-                            h4 Label
+                            h4 图表
                             span.text-muted Something else
                         .col-xs-6.col-sm-3.placeholder
                             img.img-responsive(data-src='holder.js/200x200/auto/vine', alt='Generic placeholder thumbnail')
@@ -70,114 +76,223 @@ html(lang='zh-CN')
                             span.text-muted Something else
                     h2.sub-header Section title
                     .table-responsive
-                        table.table.table-striped
+                        table#example.table.table-striped.table-bordered(cellpadding='0', cellspacing='0', border='0')
                             thead
                                 tr
-                                    th #
-                                    th Header
-                                    th Header
-                                    th Header
-                                    th Header
-                            tbody
+                                    th time
+                                    th caplen
+                                    th wirelen
+                                    th ethernet
+                                    th ip
+                                    th tcp
+                            tfoot
                                 tr
-                                    td 1,001
-                                    td Lorem
-                                    td ipsum
-                                    td dolor
-                                    td sit
-                                tr
-                                    td 1,002
-                                    td amet
-                                    td consectetur
-                                    td adipiscing
-                                    td elit
-                                tr
-                                    td 1,003
-                                    td Integer
-                                    td nec
-                                    td odio
-                                    td Praesent
-                                tr
-                                    td 1,003
-                                    td libero
-                                    td Sed
-                                    td cursus
-                                    td ante
-                                tr
-                                    td 1,004
-                                    td dapibus
-                                    td diam
-                                    td Sed
-                                    td nisi
-                                tr
-                                    td 1,005
-                                    td Nulla
-                                    td quis
-                                    td sem
-                                    td at
-                                tr
-                                    td 1,006
-                                    td nibh
-                                    td elementum
-                                    td imperdiet
-                                    td Duis
-                                tr
-                                    td 1,007
-                                    td sagittis
-                                    td ipsum
-                                    td Praesent
-                                    td mauris
-                                tr
-                                    td 1,008
-                                    td Fusce
-                                    td nec
-                                    td tellus
-                                    td sed
-                                tr
-                                    td 1,009
-                                    td augue
-                                    td semper
-                                    td porta
-                                    td Mauris
-                                tr
-                                    td 1,010
-                                    td massa
-                                    td Vestibulum
-                                    td lacinia
-                                    td arcu
-                                tr
-                                    td 1,011
-                                    td eget
-                                    td nulla
-                                    td Class
-                                    td aptent
-                                tr
-                                    td 1,012
-                                    td taciti
-                                    td sociosqu
-                                    td ad
-                                    td litora
-                                tr
-                                    td 1,013
-                                    td torquent
-                                    td per
-                                    td conubia
-                                    td nostra
-                                tr
-                                    td 1,014
-                                    td per
-                                    td inceptos
-                                    td himenaeos
-                                    td Curabitur
-                                tr
-                                    td 1,015
-                                    td sodales
-                                    td ligula
-                                    td in
-                                    td libero
+                                    th time
+                                    th caplen
+                                    th wirelen
+                                    th ethernet
+                                    th ip
+                                    th tcp
+
         //
           Bootstrap core JavaScript
           ==================================================
         // Placed at the end of the document so the pages load faster
         script(src='javascripts/jquery-3.1.0.min.js')
         script(src='bootstrap/js/bootstrap.min.js')
+        script(src='vendors/jquery-1.12.3.min.js')
+        script(src='vendors/modernizr-2.6.2-respond-1.1.0.min.js')
+        script(src='bootstrap/js/bootstrap.min.js')
+        script(src='vendors/datatables/js/jquery.dataTables.min.js')
+        script(src='assets/scripts.js')
+        script(src='assets/DT_bootstrap.js')
+        script.
+            /* Formatting function for row details - modify as you need */
+            function format(d) {
+                // `d` is the original data object for the row
+                return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+                        '<tr>' +
+                        '<td>Ethernet:</td>' +
+                        '</tr>' +
+                        '<tr>' +
+                        '<td>Src:</td>' +
+                        '<td>' + d.ethernet.src + '</td>' +
+                        '</tr>' +
+                        '<tr>' +
+                        '<td>Dst:</td>' +
+                        '<td>' + d.ethernet.dst + '</td>' +
+                        '</tr>' +
+                        '<tr>' +
+                        '<td>Length:</td>' +
+                        '<td>' + d.ethernet.length + '</td>' +
+                        '</tr>' +
+                        '<tr>' +
+                        '<td>Offset:</td>' +
+                        '<td>' + d.ethernet.offset + '</td>' +
+                        '</tr>' +
+                        '</table>';
+            }
+
+            function format1(d) {
+                // `d` is the original data object for the row
+                return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+                        '<tr>' +
+                        '<td>Ip:</td>' +
+                        '</tr>' +
+                        '<tr>' +
+                        '<td>Src:</td>' +
+                        '<td>' + d.ip.src + '</td>' +
+                        '</tr>' +
+                        '<tr>' +
+                        '<td>Dst:</td>' +
+                        '<td>' + d.ip.dst + '</td>' +
+                        '</tr>' +
+                        '<tr>' +
+                        '<td>Length:</td>' +
+                        '<td>' + d.ip.length + '</td>' +
+                        '</tr>' +
+                        '<tr>' +
+                        '<td>Offset:</td>' +
+                        '<td>' + d.ip.offset + '</td>' +
+                        '</tr>' +
+                        '</table>';
+            }
+
+            function format2(d) {
+                // `d` is the original data object for the row
+                return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+                        '<tr>' +
+                        '<td>Tcp:</td>' +
+                        '</tr>' +
+                        '<tr>' +
+                        '<td>Src:</td>' +
+                        '<td>' + d.tcp.src + '</td>' +
+                        '</tr>' +
+                        '<tr>' +
+                        '<td>Dst:</td>' +
+                        '<td>' + d.tcp.dst + '</td>' +
+                        '</tr>' +
+                        '<tr>' +
+                        '<td>Ack:</td>' +
+                        '<td>' + d.tcp.ack + '</td>' +
+                        '</tr>' +
+                        '<tr>' +
+                        '<td>Rst:</td>' +
+                        '<td>' + d.tcp.rst + '</td>' +
+                        '</tr>' +
+                        '<tr>' +
+                        '<td>Syn:</td>' +
+                        '<td>' + d.tcp.syn + '</td>' +
+                        '</tr>' +
+                        '<tr>' +
+                        '<td>Fin:</td>' +
+                        '<td>' + d.tcp.fin + '</td>' +
+                        '</tr>' +
+                        '</table>';
+            }
+            $(document).ready(function () {
+                var table = $('#example').DataTable({
+                    destroy: true,
+                    "ajax": "/data/data.json",
+                    "columns": [
+                        {"data": 'timestamp'},
+                        {"data": "caplen"},
+                        {"data": "wirelen"},
+                        {
+                            "className": 'details-control',
+                            "orderable": false,
+                            "data": null,
+                            "defaultContent": ''
+                        },
+                        {
+                            "className": 'details-control-1',
+                            "orderable": false,
+                            "data": null,
+                            "defaultContent": ''
+                        },
+                        {
+                            "className": 'details-control-2',
+                            "orderable": false,
+                            "data": null,
+                            "defaultContent": ''
+                        }
+                    ],
+                    "order": [[1, 'asc']]
+                });
+                // Add event listener for opening and closing details
+                $('#example tbody').on('click', 'td.details-control', function () {
+                    var tr = $(this).closest('tr');
+                    var row = table.row(tr);
+
+                    if (row.child.isShown()) {
+                        // This row is already open - close it
+                        row.child.hide();
+                        $(this).removeClass('shown');
+                    }
+                    else {
+                        // Open this row
+
+                        row.child(format(row.data())).show();
+                        $(this).addClass('shown');
+                    }
+                });
+
+                $('#example tbody').on('click', 'td.details-control-1', function () {
+                    var tr = $(this).closest('tr');
+                    var row = table.row(tr);
+
+                    if (row.child.isShown()) {
+                        // This row is already open - close it
+                        row.child.hide();
+                        $(this).removeClass('shown');
+                    }
+                    else {
+                        if (row.data().ip) {
+                            // Open this row
+                            row.child(format1(row.data())).show();
+                            $(this).addClass('shown');
+                        } else {
+                            alert("none");
+                        }
+                    }
+                });
+
+                $('#example tbody').on('click', 'td.details-control-2', function () {
+                    var tr = $(this).closest('tr');
+                    var row = table.row(tr);
+
+                    if (row.child.isShown()) {
+                        // This row is already open - close it
+                        row.child.hide();
+                        $(this).removeClass('shown');
+                    }
+                    else {
+                        // Open this row
+                        if (row.data().tcp) {
+                            row.child(format2(row.data())).show();
+                            $(this).addClass('shown');
+                        } else {
+                            alert("none");
+                        }
+                    }
+                });
+            });
+        style(type='text/css').
+            td.details-control {
+                background: url('/images/details_open.png') no-repeat center center;
+                cursor: pointer;
+            }
+
+            td.details-control-1 {
+                background: url('/images/details_open.png') no-repeat center center;
+                cursor: pointer;
+            }
+
+            td.details-control-2 {
+                background: url('/images/details_open.png') no-repeat center center;
+                cursor: pointer;
+            }
+
+            td.shown {
+                background: url('/images/details_close.png') no-repeat center center;
+            }
