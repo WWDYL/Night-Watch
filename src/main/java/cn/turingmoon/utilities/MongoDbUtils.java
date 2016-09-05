@@ -40,7 +40,7 @@ public class MongoDbUtils {
     }
 
     public List<Document> getFlowRecords(Bson query) {
-        List<Document> doc = traffic.find(query).into(new ArrayList<Document>());
+        List<Document> doc = flows.find(query).into(new ArrayList<Document>());
         return doc;
     }
 

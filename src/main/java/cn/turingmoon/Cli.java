@@ -1,5 +1,7 @@
 package cn.turingmoon;
 
+import cn.turingmoon.detectors.FlowHeaderDetector;
+import cn.turingmoon.detectors.TrafficPatternDetector;
 import cn.turingmoon.generators.FlowStore;
 import cn.turingmoon.generators.PacketCapturer;
 import org.apache.commons.cli.*;
@@ -14,18 +16,27 @@ public class Cli {
     static {
         options.addOption("h", "help", false, "The command help");
         options.addOption("f", "file", false, "filename");
-        options.addOption("s", "server", false, "Express");
+        options.addOption("s", "server", false, "Start a web presenter");
+        options.addOption("v", "version", false, "Display software version");
+    }
+
+    static void printVersion() {
+        System.out.println("Night Watch\nAbnormal Traffic Detection System\nVersion: 0.5");
     }
 
     static void printHelp() {
         HelpFormatter hf = new HelpFormatter();
-        hf.printHelp("Network Abnormal Traffic Detector", options);
+        hf.printHelp("Night Watch", options);
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         CommandLineParser parser = new PosixParser();
         try {
             CommandLine cl = parser.parse(options, args);
+            if (cl.hasOption("v")) {
+                printVersion();
+                return;
+            }
             if (cl.hasOption("h")) {
                 printHelp();
                 return;
@@ -42,7 +53,11 @@ public class Cli {
             FlowStore store = new FlowStore();
             store.run();
 
+            FlowHeaderDetector flowDect = new FlowHeaderDetector();
+            flowDect.run();
 
+            TrafficPatternDetector trafficDect = new TrafficPatternDetector();
+            trafficDect.run();
 
             if (cl.hasOption("s")) {
                 Runtime run = Runtime.getRuntime();

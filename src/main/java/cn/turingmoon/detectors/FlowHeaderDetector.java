@@ -9,14 +9,19 @@ import cn.turingmoon.utilities.RedisUtils;
 import org.bson.Document;
 import redis.clients.jedis.Jedis;
 
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static com.mongodb.client.model.Filters.gt;
+
+
 public class FlowHeaderDetector {
 
     private ScheduledExecutorService scheduExec;
+    private Date begin_time = new Date(0);
 
     public FlowHeaderDetector() {
         scheduExec = Executors.newScheduledThreadPool(2);
@@ -24,21 +29,21 @@ public class FlowHeaderDetector {
 
     private boolean isSmall(int num) {
         /* TODO: implement this function. */
-        return false;
+        return true;
     }
 
     private boolean isLarge(int num) {
         /* TODO: implement this function. */
-        return false;
+        return true;
     }
 
     private boolean isReflectingPort(String sPort) {
         int port = Integer.parseInt(sPort);
-        return port == 7 || port == 13 || port == 13 || port == 17;
+        return port == 7 || port == 13 || port == 17 || port == 19;
     }
 
     private boolean isBroadcastAddr(String ip) {
-        return false;
+        return ip.equals(LocalStorage.BroadcastAddr);
     }
 
     private void recordAttackType(Flow flow, AttackType type) {
@@ -88,8 +93,15 @@ public class FlowHeaderDetector {
         scheduExec.scheduleWithFixedDelay(new Runnable() {
             public void run() {
                 MongoDbUtils utils = MongoDbUtils.getInstance();
-                List<Document> flows = utils.getFlowRecords(new Document());
-                // TODO: add detect loop
+                List<Document> flows = utils.getFlowRecords(gt("BeginTime", begin_time));
+                int num = 0;
+                for (Document document : flows) {
+                    num++;
+                    Flow tempflow = Flow.parseDocument(document);
+                    detect(tempflow);
+                    begin_time = tempflow.getbTime();
+                }
+                System.out.println("NUM: " + num);
             }
         }, 60000, 60000, TimeUnit.MILLISECONDS);
     }

@@ -2,12 +2,10 @@ package cn.turingmoon.generators;
 
 import cn.turingmoon.LocalStorage;
 import cn.turingmoon.models.Flow;
-import cn.turingmoon.utilities.MongoDbUtils;
 import org.jnetpcap.packet.JPacket;
 import org.jnetpcap.packet.format.FormatUtils;
 import org.jnetpcap.protocol.network.Icmp;
 import org.jnetpcap.protocol.network.Ip4;
-import org.jnetpcap.protocol.network.Ip6;
 import org.jnetpcap.protocol.tcpip.Tcp;
 import org.jnetpcap.protocol.tcpip.Udp;
 
@@ -18,17 +16,12 @@ public class FlowGenerator {
     private static FlowGenerator generator = null;
 
     private Flow temp = null;
-    private MongoDbUtils dbUtils = null;
+
     private Ip4 ip4 = new Ip4();
-    private Ip6 ip6 = new Ip6();
+//    private Ip6 ip6 = new Ip6();
     private Tcp tcp = new Tcp();
     private Udp udp = new Udp();
     private Icmp icmp = new Icmp();
-
-
-    FlowGenerator() {
-        dbUtils = MongoDbUtils.getInstance();
-    }
 
     public static FlowGenerator getInstance() {
         if (generator == null) {
@@ -41,8 +34,8 @@ public class FlowGenerator {
         temp = new Flow();
         if (packet.hasHeader(ip4)) {
             ip4Handler(ip4);
-        } else if (packet.hasHeader(ip6)) {
-            ip6Handler(ip6);
+//        } else if (packet.hasHeader(ip6)) {
+//            ip6Handler(ip6);
         } else {
             return;
         }
@@ -87,13 +80,13 @@ public class FlowGenerator {
         temp.setdIP(dstIp);
     }
 
-    private void ip6Handler(Ip6 ip) {
-        String srcIp = FormatUtils.ip(ip.source());
-        String dstIp = FormatUtils.ip(ip.destination());
-//        System.out.println("IPv6: " + srcIp + " " + dstIp);
-        temp.setsIP(srcIp);
-        temp.setdIP(dstIp);
-    }
+//    private void ip6Handler(Ip6 ip) {
+//        String srcIp = FormatUtils.ip(ip.source());
+//        String dstIp = FormatUtils.ip(ip.destination());
+////        System.out.println("IPv6: " + srcIp + " " + dstIp);
+//        temp.setsIP(srcIp);
+//        temp.setdIP(dstIp);
+//    }
 
 
     private void icmpHandler(Icmp icmp) {
