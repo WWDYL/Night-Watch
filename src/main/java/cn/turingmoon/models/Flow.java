@@ -101,12 +101,29 @@ public class Flow {
     }
 
     public static Flow parseDocument(Document document) {
-        // TODO: implement this.
-        return null;
+        Flow temp = new Flow();
+        temp.setbTime(document.getDate("BeginTime"));
+        temp.seteTime(document.getDate("EndTime"));
+        temp.setsIP(document.getString("SrcIP"));
+        temp.setdIP(document.getString("DstIP"));
+        temp.setsPort(document.getString("SrcPort"));
+        temp.setdPort(document.getString("DstPort"));
+        temp.setType(document.getString("Type"));
+        temp.setpNum(document.getInteger("PacketNum"));
+        temp.setpSize(document.getInteger("PacketSize"));
+        return temp;
     }
 
-    public static Document toDocument(Flow flow) {
-        // TODO: implement this.
-        return null;
+    public static Document toDocument(Flow item) {
+        return new Document()
+                .append("BeginTime", item.getbTime())
+                .append("EndTime", item.geteTime())
+                .append("SrcIP", item.getsIP())
+                .append("DstIP", item.getdIP())
+                .append("SrcPort", item.getsPort())
+                .append("DstPort", item.getdPort())
+                .append("Type", item.getType())
+                .append("PacketNum", item.getpNum())
+                .append("PacketSize", item.getpSize());
     }
 }

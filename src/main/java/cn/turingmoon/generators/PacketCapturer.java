@@ -1,5 +1,6 @@
 package cn.turingmoon.generators;
 
+import cn.turingmoon.LocalStorage;
 import org.jnetpcap.Pcap;
 import org.jnetpcap.PcapBpfProgram;
 import org.jnetpcap.PcapIf;
@@ -26,15 +27,20 @@ public class PacketCapturer implements PcapPacketHandler<String> {
             // TODO: Modify this line to another safe method to exit.
             System.exit(1);
         }
+
         int i = 0;
         for (PcapIf pcapIf : pcapIfs) {
             System.out.printf("%d: %s %s\n", i++, pcapIf.getAddresses().get(0).getAddr(), pcapIf.getDescription());
         }
 
+
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please input the number of the NIC: ");
         int num = scanner.nextInt();
         PcapIf dev = pcapIfs.get(num);
+
+        LocalStorage.BroadcastAddr = dev.getAddresses().get(0).getBroadaddr().toString();
+        System.out.println(LocalStorage.BroadcastAddr);
 
         PcapBpfProgram program = new PcapBpfProgram();
         String bpf = "ip";

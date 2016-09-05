@@ -133,14 +133,4 @@ public class TrafficPattern {
     public void setACK_num(int ACK_num) {
         this.ACK_num = ACK_num;
     }
-
-    public static TrafficPattern parseDocument(Document document) {
-        // TODO: implement this.
-        return null;
-    }
-
-    public static Document toDocument(TrafficPattern pattern) {
-        // TODO: implement this.
-        return null;
-    }
 }

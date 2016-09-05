@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public class LocalStorage {
+    public static String BroadcastAddr = null;
     public static List<Flow> tempFlows = new ArrayList<Flow>();
     public static Map<String, TrafficPattern> source_based = new HashMap<String, TrafficPattern>();
     public static Map<String, TrafficPattern> destination_based = new HashMap<String, TrafficPattern>();

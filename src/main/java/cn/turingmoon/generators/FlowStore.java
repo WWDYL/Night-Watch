@@ -25,16 +25,7 @@ public class FlowStore {
                 System.err.println("Storing...");
                 List<Document> docs = new ArrayList<Document>();
                 for (Flow item : LocalStorage.tempFlows) {
-                    Document temp = new Document()
-                            .append("BeginTime", item.getbTime())
-                            .append("EndTime", item.geteTime())
-                            .append("SrcIP", item.getsIP())
-                            .append("DstIP", item.getdIP())
-                            .append("SrcPort", item.getsPort())
-                            .append("DstPort", item.getdPort())
-                            .append("Type", item.getType())
-                            .append("PacketNum", item.getpNum())
-                            .append("PacketSize", item.getpSize());
+                    Document temp = Flow.toDocument(item);
                     docs.add(temp);
                 }
                 MongoDbUtils dbUtils = MongoDbUtils.getInstance();

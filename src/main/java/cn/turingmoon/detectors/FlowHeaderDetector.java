@@ -17,10 +17,11 @@ import java.util.concurrent.TimeUnit;
 
 import static com.mongodb.client.model.Filters.gt;
 
+
 public class FlowHeaderDetector {
 
     private ScheduledExecutorService scheduExec;
-    private long begin_time = 0;
+    private Date begin_time = new Date(0);
 
     public FlowHeaderDetector() {
         scheduExec = Executors.newScheduledThreadPool(2);
@@ -38,11 +39,11 @@ public class FlowHeaderDetector {
 
     private boolean isReflectingPort(String sPort) {
         int port = Integer.parseInt(sPort);
-        return port == 7 || port == 13 || port == 13 || port == 17;
+        return port == 7 || port == 13 || port == 17 || port == 19;
     }
 
     private boolean isBroadcastAddr(String ip) {
-        return false;
+        return ip.equals(LocalStorage.BroadcastAddr);
     }
 
     private void recordAttackType(Flow flow, AttackType type) {
@@ -92,12 +93,13 @@ public class FlowHeaderDetector {
         scheduExec.scheduleWithFixedDelay(new Runnable() {
             public void run() {
                 MongoDbUtils utils = MongoDbUtils.getInstance();
-                List<Document> flows = utils.getFlowRecords(new Document());
+                List<Document> flows = utils.getFlowRecords(gt("BeginTime", begin_time));
                 int num = 0;
                 for (Document document : flows) {
                     num++;
                     Flow tempflow = Flow.parseDocument(document);
                     detect(tempflow);
+                    begin_time = tempflow.getbTime();
                 }
                 System.out.println("NUM: " + num);
             }
