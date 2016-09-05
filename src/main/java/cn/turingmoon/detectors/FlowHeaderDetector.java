@@ -9,14 +9,18 @@ import cn.turingmoon.utilities.RedisUtils;
 import org.bson.Document;
 import redis.clients.jedis.Jedis;
 
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static com.mongodb.client.model.Filters.gt;
+
 public class FlowHeaderDetector {
 
     private ScheduledExecutorService scheduExec;
+    private long begin_time = 0;
 
     public FlowHeaderDetector() {
         scheduExec = Executors.newScheduledThreadPool(2);
@@ -88,8 +92,11 @@ public class FlowHeaderDetector {
         scheduExec.scheduleWithFixedDelay(new Runnable() {
             public void run() {
                 MongoDbUtils utils = MongoDbUtils.getInstance();
-                List<Document> flows = utils.getFlowRecords(new Document());
-                // TODO: add detect loop
+                List<Document> flows = utils.getFlowRecords(gt("BeginTime", begin_time));
+                for (Document document : flows) {
+                    Flow tempflow = Flow.parseDocument(document);
+                    detect(tempflow);
+                }
             }
         }, 60000, 60000, TimeUnit.MILLISECONDS);
     }

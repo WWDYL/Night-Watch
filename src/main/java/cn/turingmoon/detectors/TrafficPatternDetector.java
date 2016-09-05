@@ -1,8 +1,21 @@
 package cn.turingmoon.detectors;
 
+import cn.turingmoon.LocalStorage;
 import cn.turingmoon.models.TrafficPattern;
 
+import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 public class TrafficPatternDetector {
+
+    private ScheduledExecutorService scheduExec = null;
+
+    public TrafficPatternDetector() {
+        scheduExec = Executors.newScheduledThreadPool(2);
+    }
+
     private static class ScanningValue {
         private static double w_n_flow = 0.3;
         private static double w_l_flow = 0.1;
@@ -101,5 +114,22 @@ public class TrafficPatternDetector {
 
             }
         }
+    }
+
+    public void run() {
+        scheduExec.scheduleWithFixedDelay(new Runnable() {
+            public void run() {
+                TrafficPatternDataGenerator generator = new TrafficPatternDataGenerator();
+                generator.run();
+                for (Map.Entry<String, TrafficPattern> item : LocalStorage.source_based.entrySet()) {
+                    detect(item.getValue(), 1);
+                }
+
+                for (Map.Entry<String, TrafficPattern> item : LocalStorage.destination_based.entrySet()) {
+                    detect(item.getValue(), 2);
+                }
+
+            }
+        }, 60000, 60000, TimeUnit.MILLISECONDS);
     }
 }

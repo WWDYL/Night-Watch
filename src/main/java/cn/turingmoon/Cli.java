@@ -1,5 +1,7 @@
 package cn.turingmoon;
 
+import cn.turingmoon.detectors.FlowHeaderDetector;
+import cn.turingmoon.detectors.TrafficPatternDetector;
 import cn.turingmoon.generators.FlowStore;
 import cn.turingmoon.generators.PacketCapturer;
 import org.apache.commons.cli.*;
@@ -42,7 +44,11 @@ public class Cli {
             FlowStore store = new FlowStore();
             store.run();
 
+            FlowHeaderDetector flowDect = new FlowHeaderDetector();
+            flowDect.run();
 
+            TrafficPatternDetector trafficDect = new TrafficPatternDetector();
+            trafficDect.run();
 
             if (cl.hasOption("s")) {
                 Runtime run = Runtime.getRuntime();

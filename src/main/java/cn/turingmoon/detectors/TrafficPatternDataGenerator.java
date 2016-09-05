@@ -1,5 +1,6 @@
 package cn.turingmoon.detectors;
 
+import cn.turingmoon.LocalStorage;
 import cn.turingmoon.constants.FlowType;
 import cn.turingmoon.models.TrafficPattern;
 import cn.turingmoon.utilities.MongoDbUtils;
@@ -103,22 +104,28 @@ public class TrafficPatternDataGenerator {
         return pattern;
     }
 
-    private void storeIntoDb(TrafficPattern pattern) {
-        MongoDbUtils utils = MongoDbUtils.getInstance();
+    private void storeIntoDb(String ip, TrafficPattern pattern) {
 
+        // LocalStorage.source_based.put(ip, pattern);
     }
 
     public void run() {
+
         DistinctIterable<String> srcIPs = utils.getDistinctValues("SrcIP");
         DistinctIterable<String> dstIPs = utils.getDistinctValues("DstIP");
+
         for (String ip : srcIPs) {
             TrafficPattern pattern = generatePattern(ip, 1);
-            storeIntoDb(pattern);
+            LocalStorage.source_based.put(ip, pattern);
+            storeIntoDb(ip, pattern);
         }
+
         for (String ip : dstIPs) {
             TrafficPattern pattern = generatePattern(ip, 2);
-            storeIntoDb(pattern);
+            LocalStorage.destination_based.put(ip, pattern);
+            storeIntoDb(ip, pattern);
         }
+
     }
 
 }
