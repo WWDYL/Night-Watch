@@ -104,8 +104,10 @@ public class TrafficPatternDetector {
         if (type == 1) {
             if (isLarge(pattern.getFlow_num()) && isSmall(pattern.getFlow_size_avr()) && isSmall(pattern.getPacket_num_avr())) {
                 if (isLarge(pattern.getDstPort_num()) && isSmall(pattern.getSrcIP_num())) {
-                    System.out.println("host scanning");
-                    recordAttackType("host scanning");
+                    if (isScanning(pattern)) {
+                        System.out.println("host scanning");
+                        recordAttackType("host scanning");
+                    }
                 }
                 if (isSmall(pattern.getDstPort_num()) && isSmall(pattern.getACK_num() / pattern.getSYN_num())) {
                     System.out.println("TCP SYN flood");
@@ -114,17 +116,25 @@ public class TrafficPatternDetector {
             }
             if (isLarge(pattern.getPacket_num_sum()) && isLarge(pattern.getFlow_size_sum())) {
                 System.out.println("(ICMP, UDP, TCP) flooding");
+                if (isSYNflooding(pattern)) {
+                    System.out.println("SYN flooding");
+                }
                 recordAttackType("(ICMP UDP TCP) flooding");
             }
         } else if (type == 2) {
             if (isLarge(pattern.getFlow_num()) && isSmall(pattern.getFlow_size_avr()) && isSmall(pattern.getPacket_num_avr())) {
                 if (isLarge(pattern.getDstIP_num()) && isSmall(pattern.getDstPort_num())) {
-                    System.out.println("network scanning");
-                    recordAttackType("network scanning");
+                    if (isScanning(pattern)) {
+                        System.out.println("network scanning");
+                        recordAttackType("network scanning");
+                    }
                 }
             }
             if (isLarge(pattern.getPacket_num_sum()) && isLarge(pattern.getFlow_size_sum())) {
                 System.out.println("(ICMP, UDP, TCP) flooding");
+                if (isSYNflooding(pattern)) {
+                    System.out.println("SYN flooding");
+                }
                 recordAttackType("(ICMP UDP TCP) flooding");
             }
         }

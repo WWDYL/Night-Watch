@@ -52,7 +52,6 @@ public class PacketCapturer implements PcapPacketHandler<String> {
         int timeout = 10 * 1000;
         Pcap pcap = Pcap.openLive(dev.getName(), snaplen, flags, timeout, errBuf);
 
-
         if (pcap == null) {
             System.err.printf("Error while opening device for capture: %s\n", errBuf.toString());
             return;

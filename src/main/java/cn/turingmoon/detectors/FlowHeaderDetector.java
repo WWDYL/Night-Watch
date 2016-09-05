@@ -28,13 +28,11 @@ public class FlowHeaderDetector {
     }
 
     private boolean isSmall(int num) {
-        /* TODO: implement this function. */
-        return true;
+        return false;
     }
 
     private boolean isLarge(int num) {
-        /* TODO: implement this function. */
-        return true;
+        return num > 200;
     }
 
     private boolean isReflectingPort(String sPort) {
