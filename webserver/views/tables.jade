@@ -1,274 +1,216 @@
 doctype html
-html
+html(lang='zh-CN')
     head
-        title 网络异常流量检测系统
-        meta(http-equiv='Content-Type', content='text/html;charset=utf-8')
-        // Bootstrap
-        link(href='/bootstrap/css/bootstrap.min.css', rel='stylesheet', media='screen')
-        link(href='bootstrap/css/bootstrap-responsive.min.css', rel='stylesheet', media='screen')
-        link(href='assets/styles.css', rel='stylesheet', media='screen')
+        meta(charset='utf-8')
+        meta(http-equiv='X-UA-Compatible', content='IE=edge')
+        meta(name='viewport', content='width=device-width, initial-scale=1')
+        // 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！
+        meta(name='description', content='')
+        meta(name='author', content='')
+        link(rel='icon', href='../../favicon.ico')
+        title 网络异常流量分析
+        // Bootstrap core CSS
+        link(href='bootstrap/css/bootstrap.min.css', rel='stylesheet')
+        // Custom styles for this template
+        link(href='stylesheets/dashboard.css', rel='stylesheet')
         link(href='assets/DT_bootstrap.css', rel='stylesheet', media='screen')
-        //if lte IE 8
-          script(language='javascript', type='text/javascript', src='vendors/flot/excanvas.min.js')
-        // HTML5 shim, for IE6-8 support of HTML5 elements
+        link(href='bootstrap/css/bootstrap-responsive.min.css', rel='stylesheet', media='screen')
+        //link(href='/bootstrap/css/bootstrap.min.css', rel='stylesheet', media='screen')
+          //  link(href='assets/styles.css', rel='stylesheet', media='screen')
+
+
+        // HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries
         //if lt IE 9
-          script(src='http://html5shim.googlecode.com/svn/trunk/html5.js')
+          script(src='//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js')
+          script(src='//cdn.bootcss.com/respond.js/1.4.2/respond.min.js')
+    body
+        .bw
+            .fu
+                .ge.aom
+                    nav.aot
+                        .aon
+                            button.amy.amz.aoo(type="button", data-toggle="collapse", data-target="#nav-toggleable-sm")
+                                span.ct Toggle nav
+                            a.aop.cn(href="index.html")
+                                span.bv.act.aoq.glyphicon.glyphicon-dashboard
+                        .collapse.sidebar
+                            form.search
+                                input.form-control(type="text", placeholder="搜索...")
+                            button.fm(type="submit")
+                                span.adn.glyphicon.glyphicon-search
+                            ul.nav.nav-stacked.of
+                                li.tq Dashboards
+                                li.active
+                                    a(href="dashboard.html") table
+                                li
+                                    a(href="tables.html") chart
+                .hc.aps
+                    .apa
+                        .apb
+                            h2.apc 网络异常流量检测
+                        .ob.ape
+                            .tn.aol
+                                input.form-control(type="text", value="01/01/15 - 12/31/15", data-provide="datepicker")
+                    hr
+                    h2.sub-header 流量监测图
+                    .row.placeholders
+                        .col-xs-6.col-sm-12.placeholder
+                            //img.img-responsive(data-src='holder.js/200x200/auto/sky', alt='Generic placeholder thumbnail')
+                            h4#container(min-width='310px',height='400px')
+                            span.text-muted
+                        .col-xs-6.col-sm-12.placeholder
+                            h4#container1(min-width='300px',height='400px')
+
+        //
+          Bootstrap core JavaScript
+          ==================================================
+        // Placed at the end of the document so the pages load faster
+        script(src='javascripts/jquery-3.1.0.min.js')
+        script(src='bootstrap/js/bootstrap.min.js')
         script(src='vendors/jquery-1.12.3.min.js')
         script(src='vendors/modernizr-2.6.2-respond-1.1.0.min.js')
         script(src='bootstrap/js/bootstrap.min.js')
         script(src='vendors/datatables/js/jquery.dataTables.min.js')
         script(src='assets/scripts.js')
         script(src='assets/DT_bootstrap.js')
+        script(src='https://code.highcharts.com/highcharts.js')
+        script(src='https://code.highcharts.com/highcharts-3d.js')
+        script(src='https://code.highcharts.com/modules/exporting.js')
         script.
-            /* Formatting function for row details - modify as you need */
-            function format(d) {
-                // `d` is the original data object for the row
-                return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
-                        '<tr>' +
-                        '<td>Ethernet:</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>Src:</td>' +
-                        '<td>' + d.ethernet.src + '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>Dst:</td>' +
-                        '<td>' + d.ethernet.dst + '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>Length:</td>' +
-                        '<td>' + d.ethernet.length + '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>Offset:</td>' +
-                        '<td>' + d.ethernet.offset + '</td>' +
-                        '</tr>' +
-                        '</table>';
-            }
-
-            function format1(d) {
-                // `d` is the original data object for the row
-                return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
-                        '<tr>' +
-                        '<td>Ip:</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>Src:</td>' +
-                        '<td>' + d.ip.src + '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>Dst:</td>' +
-                        '<td>' + d.ip.dst + '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>Length:</td>' +
-                        '<td>' + d.ip.length + '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>Offset:</td>' +
-                        '<td>' + d.ip.offset + '</td>' +
-                        '</tr>' +
-                        '</table>';
-            }
-
-            function format2(d) {
-                // `d` is the original data object for the row
-                return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
-                        '<tr>' +
-                        '<td>Tcp:</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>Src:</td>' +
-                        '<td>' + d.tcp.src + '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>Dst:</td>' +
-                        '<td>' + d.tcp.dst + '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>Ack:</td>' +
-                        '<td>' + d.tcp.ack + '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>Rst:</td>' +
-                        '<td>' + d.tcp.rst + '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>Syn:</td>' +
-                        '<td>' + d.tcp.syn + '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>Fin:</td>' +
-                        '<td>' + d.tcp.fin + '</td>' +
-                        '</tr>' +
-                        '</table>';
-            }
-            $(document).ready(function() {
-                var table = $('#example').DataTable( {
-                    destroy : true,
-                    "ajax": "api/trafficData",
-                    "columns": [
-                        { "data": 'timestamp' },
-                        { "data": "caplen" },
-                        { "data": "wirelen"},
-                        {
-                            "className":      'details-control',
-                            "orderable":      false,
-                            "data":           null,
-                            "defaultContent": ''
-                        },
-                        {
-                            "className": 'details-control-1',
-                            "orderable": false,
-                            "data": null,
-                            "defaultContent": ''
-                        },
-                        {
-                            "className": 'details-control-2',
-                            "orderable": false,
-                            "data": null,
-                            "defaultContent": ''
+            $(function () {
+                $('#container1').highcharts({
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'World\'s largest cities per 2014'
+                    },
+                    subtitle: {
+                        text: 'Source: <a href="http://en.wikipedia.org/wiki/List_of_cities_proper_by_population">Wikipedia</a>'
+                    },
+                    xAxis: {
+                        type: 'category',
+                        labels: {
+                            rotation: -45,
+                            style: {
+                                fontSize: '13px',
+                                fontFamily: 'Verdana, sans-serif'
+                            }
                         }
-                    ],
-                    "order": [[1, 'asc']]
-                } );
-                // Add event listener for opening and closing details
-                $('#example tbody').on('click', 'td.details-control', function () {
-                    var tr = $(this).closest('tr');
-                    var row = table.row(tr);
-
-                    if (row.child.isShown()) {
-                        // This row is already open - close it
-                        row.child.hide();
-                        $(this).removeClass('shown');
-                    }
-                    else {
-                        // Open this row
-
-                        row.child(format(row.data())).show();
-                        $(this).addClass('shown');
-                    }
-                });
-
-                $('#example tbody').on('click', 'td.details-control-1', function () {
-                    var tr = $(this).closest('tr');
-                    var row = table.row(tr);
-
-                    if (row.child.isShown()) {
-                        // This row is already open - close it
-                        row.child.hide();
-                        $(this).removeClass('shown');
-                    }
-                    else {
-                        if (row.data().ip){
-                            // Open this row
-                            row.child(format1(row.data())).show();
-                            $(this).addClass('shown');
-                        } else {
-                            alert("none");
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Population (millions)'
                         }
-                    }
-                });
-
-                $('#example tbody').on('click', 'td.details-control-2', function () {
-                    var tr = $(this).closest('tr');
-                    var row = table.row(tr);
-
-                    if (row.child.isShown()) {
-                        // This row is already open - close it
-                        row.child.hide();
-                        $(this).removeClass('shown');
-                    }
-                    else {
-                        // Open this row
-                        if (row.data().tcp) {
-                            row.child(format2(row.data())).show();
-                            $(this).addClass('shown');
-                        } else {
-                            alert("none");
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    tooltip: {
+                        pointFormat: 'Population in 2008: <b>{point.y:.1f} millions</b>'
+                    },
+                    series: [{
+                        name: 'Population',
+                        data: [
+                            ['Shanghai', 23.7],
+                            ['Lagos', 16.1],
+                            ['Istanbul', 14.2],
+                            ['Karachi', 14.0],
+                            ['Mumbai', 12.5],
+                            ['Moscow', 12.1],
+                            ['São Paulo', 11.8],
+                            ['Beijing', 11.7],
+                            ['Guangzhou', 11.1],
+                            ['Delhi', 11.1],
+                            ['Shenzhen', 10.5],
+                            ['Seoul', 10.4],
+                            ['Jakarta', 10.0],
+                            ['Kinshasa', 9.3],
+                            ['Tianjin', 9.3],
+                            ['Tokyo', 9.0],
+                            ['Cairo', 8.9],
+                            ['Dhaka', 8.9],
+                            ['Mexico City', 8.9],
+                            ['Lima', 8.9]
+                        ],
+                        dataLabels: {
+                            enabled: true,
+                            rotation: -90,
+                            color: '#FFFFFF',
+                            align: 'right',
+                            format: '{point.y:.1f}', // one decimal
+                            y: 10, // 10 pixels down from the top
+                            style: {
+                                fontSize: '13px',
+                                fontFamily: 'Verdana, sans-serif'
+                            }
                         }
-                    }
+                    }]
                 });
-            } );
-        style(type='text/css').
-            td.details-control {
-                background: url('/images/details_open.png') no-repeat center center;
-                cursor: pointer;
-            }
-
-
-            td.details-control-1 {
-                background: url('/images/details_open.png') no-repeat center center;
-                cursor: pointer;
-            }
-
-
-            td.details-control-2 {
-                background: url('/images/details_open.png') no-repeat center center;
-                cursor: pointer;
-            }
-
-            td.shown {
-                background: url('/images/details_close.png') no-repeat center center;
-            }
-    body
-        .navbar.navbar-fixed-top
-            .navbar-inner
-                .container-fluid
-                    a.btn.btn-navbar(data-toggle='collapse', data-target='.nav-collapse')
-                        span.icon-bar
-                        span.icon-bar
-                        span.icon-bar
-                    a.brand(href='#') 网络异常流量检测系统
-        .container-fluid
-            .row-fluid
-                #sidebar.span2
-                    ul.nav.nav-list.bs-docs-sidenav.nav-collapse.collapse
-                        li
-                            a(href='index')
-                                i.icon-chevron-right
-                                |  首页
-                        li.active
-                            a(href='tables.jade')
-                                i.icon-chevron-right
-                                |  统计表
-                        li
-                            a(href='length.jade')
-                                i.icon-chevron-right
-                                |  caplen
-                        li
-                            a(href='number.jade')
-                                i.icon-chevron-right
-                                |  wirelen
-                        li
-                            a(href='number_of_bytes.jade')
-                                i.icon-chevron-right
-                                |  ethernet.src
-                // /span
-                #content.span10
-                    .row-fluid
-                        // block
-                        .block
-                            .navbar.navbar-inner.block-header
-                                .muted.pull-left 包统计
-                            .block-content.collapse.in
-                                .span12
-                                    table#example.table.table-striped.table-bordered(cellpadding='0', cellspacing='0', border='0')
-                                        thead
-                                            tr
-                                                th time
-                                                th caplen
-                                                th wirelen
-                                                th ethernet
-                                                th ip
-                                                th tcp
-                                        tfoot
-                                            tr
-                                                th time
-                                                th caplen
-                                                th wirelen
-                                                th ethernet
-                                                th ip
-                                                th tcp
-                        // /block
-        // /.fluid-container
+            });
+        script.
+            $(function () {
+                $('#container').highcharts({
+                    title: {
+                        text: 'Combination chart'
+                    },
+                    xAxis: {
+                        categories: ['Apples', 'Oranges', 'Pears', 'Bananas', 'Plums']
+                    },
+                    labels: {
+                        items: [{
+                            html: 'Total fruit consumption',
+                            style: {
+                                left: '50px',
+                                top: '18px',
+                                color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+                            }
+                        }]
+                    },
+                    series: [{
+                        type: 'column',
+                        name: 'Jane',
+                        data: [3, 2, 1, 3, 4]
+                    }, {
+                        type: 'column',
+                        name: 'John',
+                        data: [2, 3, 5, 7, 6]
+                    }, {
+                        type: 'column',
+                        name: 'Joe',
+                        data: [4, 3, 3, 9, 0]
+                    }, {
+                        type: 'spline',
+                        name: 'Average',
+                        data: [3, 2.67, 3, 6.33, 3.33],
+                        marker: {
+                            lineWidth: 2,
+                            lineColor: Highcharts.getOptions().colors[3],
+                            fillColor: 'white'
+                        }
+                    }, {
+                        type: 'pie',
+                        name: 'Total consumption',
+                        data: [{
+                            name: 'Jane',
+                            y: 13,
+                            color: Highcharts.getOptions().colors[0] // Jane's color
+                        }, {
+                            name: 'John',
+                            y: 23,
+                            color: Highcharts.getOptions().colors[1] // John's color
+                        }, {
+                            name: 'Joe',
+                            y: 19,
+                            color: Highcharts.getOptions().colors[2] // Joe's color
+                        }],
+                        center: [100, 80],
+                        size: 100,
+                        showInLegend: false,
+                        dataLabels: {
+                            enabled: false
+                        }
+                    }]
+                });
+            });
