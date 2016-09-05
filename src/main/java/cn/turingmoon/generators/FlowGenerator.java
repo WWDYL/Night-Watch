@@ -18,17 +18,12 @@ public class FlowGenerator {
     private static FlowGenerator generator = null;
 
     private Flow temp = null;
-    private MongoDbUtils dbUtils = null;
+
     private Ip4 ip4 = new Ip4();
     private Ip6 ip6 = new Ip6();
     private Tcp tcp = new Tcp();
     private Udp udp = new Udp();
     private Icmp icmp = new Icmp();
-
-
-    FlowGenerator() {
-        dbUtils = MongoDbUtils.getInstance();
-    }
 
     public static FlowGenerator getInstance() {
         if (generator == null) {

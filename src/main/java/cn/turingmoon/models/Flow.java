@@ -22,8 +22,8 @@ public class Flow {
         Flow right = (Flow) o;
         return getsIP().equals(right.getsIP())
                 && getdIP().equals(right.getdIP())
-                && getsPort().equals(right.getsPort())
-                && getdPort().equals(right.getdPort())
+                && (getsPort() == null || getsPort().equals(right.getsPort()))
+                && (getdPort() == null || getdPort().equals(right.getdPort()))
                 && getType().equals(right.getType());
 
     }

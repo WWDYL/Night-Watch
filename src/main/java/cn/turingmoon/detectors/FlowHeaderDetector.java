@@ -28,12 +28,12 @@ public class FlowHeaderDetector {
 
     private boolean isSmall(int num) {
         /* TODO: implement this function. */
-        return false;
+        return true;
     }
 
     private boolean isLarge(int num) {
         /* TODO: implement this function. */
-        return false;
+        return true;
     }
 
     private boolean isReflectingPort(String sPort) {
@@ -92,11 +92,14 @@ public class FlowHeaderDetector {
         scheduExec.scheduleWithFixedDelay(new Runnable() {
             public void run() {
                 MongoDbUtils utils = MongoDbUtils.getInstance();
-                List<Document> flows = utils.getFlowRecords(gt("BeginTime", begin_time));
+                List<Document> flows = utils.getFlowRecords(new Document());
+                int num = 0;
                 for (Document document : flows) {
+                    num++;
                     Flow tempflow = Flow.parseDocument(document);
                     detect(tempflow);
                 }
+                System.out.println("NUM: " + num);
             }
         }, 60000, 60000, TimeUnit.MILLISECONDS);
     }

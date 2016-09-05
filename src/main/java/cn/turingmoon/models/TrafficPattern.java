@@ -12,7 +12,7 @@ public class TrafficPattern {
     private int DstIP_num;
     private int SrcPort_num;
     private int DstPort_num;
-    private FlowType Proto;
+    private String Proto;
     private int Flow_size_sum;
     private float Flow_size_avr;
     private float Flow_size_dev;
@@ -62,11 +62,11 @@ public class TrafficPattern {
         DstPort_num = dstPort_num;
     }
 
-    public FlowType getProto() {
+    public String getProto() {
         return Proto;
     }
 
-    public void setProto(FlowType proto) {
+    public void setProto(String proto) {
         Proto = proto;
     }
 

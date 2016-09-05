@@ -20,8 +20,8 @@ public class TrafficPatternDataGenerator {
         Set<String> dport_stats = new HashSet<String>();
         int sport_num = 0;
         Set<String> sport_stats = new HashSet<String>();
-        FlowType f_type = null;
-        Map<FlowType, Integer> ftype_stats = new HashMap<FlowType, Integer>();
+        String f_type = null;
+        Map<String, Integer> ftype_stats = new HashMap<String, Integer>();
         int fs_sum = 0;
         float fs_avr;
         // float fs_dev = 0;
@@ -47,10 +47,10 @@ public class TrafficPatternDataGenerator {
             }
             dport_stats.add(doc.getString("DstPort"));
             sport_stats.add(doc.getString("SrcPort"));
-            if (ftype_stats.containsKey((FlowType)doc.get("Type"))) {
-                ftype_stats.put((FlowType) doc.get("Type"), ftype_stats.get(doc.get("Type")));
+            if (ftype_stats.containsKey(doc.getString("Type"))) {
+                ftype_stats.put(doc.getString("Type"), ftype_stats.get(doc.getString("Type")));
             } else {
-                ftype_stats.put((FlowType) doc.get("Type"), 1);
+                ftype_stats.put(doc.getString("Type"), 1);
             }
             fs_sum += doc.getInteger("PacketSize");
             np_sum += doc.getInteger("PacketNum");
@@ -85,12 +85,13 @@ public class TrafficPatternDataGenerator {
         pattern.setSrcPort_num(sport_num);
 
         int val = -1;
-        for (Map.Entry<FlowType, Integer> entry : ftype_stats.entrySet()) {
+        for (Map.Entry<String, Integer> entry : ftype_stats.entrySet()) {
             if (entry.getValue() > val) {
                 f_type = entry.getKey();
                 val = entry.getValue();
             }
         }
+
         pattern.setProto(f_type);
 
         pattern.setFlow_size_sum(fs_sum);
@@ -125,7 +126,6 @@ public class TrafficPatternDataGenerator {
             LocalStorage.destination_based.put(ip, pattern);
             storeIntoDb(ip, pattern);
         }
-
     }
 
 }
