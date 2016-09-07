@@ -38,6 +38,7 @@ public class TrafficPatternDataGenerator {
             docs = utils.getFlowRecords(new Document("DstIP", ip));
         }
 
+        assert docs != null;
         for (Document doc : docs) {
             flow_num++;
             if (type == 1) {

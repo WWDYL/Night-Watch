@@ -4,25 +4,15 @@ html(lang='zh-CN')
         meta(charset='utf-8')
         meta(http-equiv='X-UA-Compatible', content='IE=edge')
         meta(name='viewport', content='width=device-width, initial-scale=1')
-        // 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！
         meta(name='description', content='')
         meta(name='author', content='')
         link(rel='icon', href='../../favicon.ico')
-        title 网络异常流量分析
-        // Bootstrap core CSS
+        title NightWatch
         link(href='bootstrap/css/bootstrap.min.css', rel='stylesheet')
-        // Custom styles for this template
-        link(href='stylesheets/dashboard.css', rel='stylesheet')
-        link(href='assets/DT_bootstrap.css', rel='stylesheet', media='screen')
+        link(href='//cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css', rel='stylesheet')
         link(href='bootstrap/css/bootstrap-responsive.min.css', rel='stylesheet', media='screen')
-        //link(href='/bootstrap/css/bootstrap.min.css', rel='stylesheet', media='screen')
-          //  link(href='assets/styles.css', rel='stylesheet', media='screen')
-
-
-        // HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries
-        //if lt IE 9
-          script(src='//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js')
-          script(src='//cdn.bootcss.com/respond.js/1.4.2/respond.min.js')
+        link(href='stylesheets/dashboard.css', rel='stylesheet')
+        link(href='stylesheets/mydatatables.css', rel='stylesheet')
     body
         .bw
             .fu
@@ -47,7 +37,7 @@ html(lang='zh-CN')
                 .hc.aps
                     .apa
                         .apb
-                            h2.apc 网络异常流量检测
+                            h2.apc NightWatch —— 网络异常流量检测系统
                         .ob.ape
                             .tn.aol
                                 input.form-control(type="text", value="01/01/15 - 12/31/15", data-provide="datepicker")
@@ -60,7 +50,7 @@ html(lang='zh-CN')
                             span.text-muted
                     h2.sub-header 流量监测表
                     .table-responsive
-                        table#example.table.table-striped.table-bordered(cellpadding='0', cellspacing='0', border='0')
+                        table#example.table.table-bordered(cellpadding='0', cellspacing='0', border='0')
                             thead
                                 tr
                                     th time
@@ -84,267 +74,9 @@ html(lang='zh-CN')
         // Placed at the end of the document so the pages load faster
         script(src='javascripts/jquery-3.1.0.min.js')
         script(src='bootstrap/js/bootstrap.min.js')
-        script(src='vendors/jquery-1.12.3.min.js')
         script(src='vendors/modernizr-2.6.2-respond-1.1.0.min.js')
-        script(src='bootstrap/js/bootstrap.min.js')
         script(src='vendors/datatables/js/jquery.dataTables.min.js')
-        script(src='assets/scripts.js')
-        script(src='assets/DT_bootstrap.js')
-        script(src='https://code.highcharts.com/highcharts.js')
-        script(src='https://code.highcharts.com/highcharts-3d.js')
-        script(src='https://code.highcharts.com/modules/exporting.js')
-        script.
-            $(function () {
-                $('#container').highcharts({
-                    title: {
-                        text: 'Combination chart'
-                    },
-                    xAxis: {
-                        categories: ['Apples', 'Oranges', 'Pears', 'Bananas', 'Plums']
-                    },
-                    labels: {
-                        items: [{
-                            html: 'Total fruit consumption',
-                            style: {
-                                left: '50px',
-                                top: '18px',
-                                color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
-                            }
-                        }]
-                    },
-                    series: [{
-                        type: 'column',
-                        name: 'Jane',
-                        data: [3, 2, 1, 3, 4]
-                    }, {
-                        type: 'column',
-                        name: 'John',
-                        data: [2, 3, 5, 7, 6]
-                    }, {
-                        type: 'column',
-                        name: 'Joe',
-                        data: [4, 3, 3, 9, 0]
-                    }, {
-                        type: 'spline',
-                        name: 'Average',
-                        data: [3, 2.67, 3, 6.33, 3.33],
-                        marker: {
-                            lineWidth: 2,
-                            lineColor: Highcharts.getOptions().colors[3],
-                            fillColor: 'white'
-                        }
-                    }, {
-                        type: 'pie',
-                        name: 'Total consumption',
-                        data: [{
-                            name: 'Jane',
-                            y: 13,
-                            color: Highcharts.getOptions().colors[0] // Jane's color
-                        }, {
-                            name: 'John',
-                            y: 23,
-                            color: Highcharts.getOptions().colors[1] // John's color
-                        }, {
-                            name: 'Joe',
-                            y: 19,
-                            color: Highcharts.getOptions().colors[2] // Joe's color
-                        }],
-                        center: [100, 80],
-                        size: 100,
-                        showInLegend: false,
-                        dataLabels: {
-                            enabled: false
-                        }
-                    }]
-                });
-            });
-        script.
-            /* Formatting function for row details - modify as you need */
-            function format(d) {
-                // `d` is the original data object for the row
-                return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
-                        '<tr>' +
-                        '<td>Ethernet:</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>Src:</td>' +
-                        '<td>' + d.ethernet.src + '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>Dst:</td>' +
-                        '<td>' + d.ethernet.dst + '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>Length:</td>' +
-                        '<td>' + d.ethernet.length + '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>Offset:</td>' +
-                        '<td>' + d.ethernet.offset + '</td>' +
-                        '</tr>' +
-                        '</table>';
-            }
-
-            function format1(d) {
-                // `d` is the original data object for the row
-                return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
-                        '<tr>' +
-                        '<td>Ip:</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>Src:</td>' +
-                        '<td>' + d.ip.src + '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>Dst:</td>' +
-                        '<td>' + d.ip.dst + '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>Length:</td>' +
-                        '<td>' + d.ip.length + '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>Offset:</td>' +
-                        '<td>' + d.ip.offset + '</td>' +
-                        '</tr>' +
-                        '</table>';
-            }
-
-            function format2(d) {
-                // `d` is the original data object for the row
-                return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
-                        '<tr>' +
-                        '<td>Tcp:</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>Src:</td>' +
-                        '<td>' + d.tcp.src + '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>Dst:</td>' +
-                        '<td>' + d.tcp.dst + '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>Ack:</td>' +
-                        '<td>' + d.tcp.ack + '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>Rst:</td>' +
-                        '<td>' + d.tcp.rst + '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>Syn:</td>' +
-                        '<td>' + d.tcp.syn + '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>Fin:</td>' +
-                        '<td>' + d.tcp.fin + '</td>' +
-                        '</tr>' +
-                        '</table>';
-            }
-            $(document).ready(function () {
-                var table = $('#example').DataTable({
-                    destroy: true,
-                    "ajax": "/data/data.json",
-                    "columns": [
-                        {"data": 'timestamp'},
-                        {"data": "caplen"},
-                        {"data": "wirelen"},
-                        {
-                            "className": 'details-control',
-                            "orderable": false,
-                            "data": null,
-                            "defaultContent": ''
-                        },
-                        {
-                            "className": 'details-control-1',
-                            "orderable": false,
-                            "data": null,
-                            "defaultContent": ''
-                        },
-                        {
-                            "className": 'details-control-2',
-                            "orderable": false,
-                            "data": null,
-                            "defaultContent": ''
-                        }
-                    ],
-                    "order": [[1, 'asc']]
-                });
-                // Add event listener for opening and closing details
-                $('#example tbody').on('click', 'td.details-control', function () {
-                    var tr = $(this).closest('tr');
-                    var row = table.row(tr);
-
-                    if (row.child.isShown()) {
-                        // This row is already open - close it
-                        row.child.hide();
-                        $(this).removeClass('shown');
-                    }
-                    else {
-                        // Open this row
-
-                        row.child(format(row.data())).show();
-                        $(this).addClass('shown');
-                    }
-                });
-
-                $('#example tbody').on('click', 'td.details-control-1', function () {
-                    var tr = $(this).closest('tr');
-                    var row = table.row(tr);
-
-                    if (row.child.isShown()) {
-                        // This row is already open - close it
-                        row.child.hide();
-                        $(this).removeClass('shown');
-                    }
-                    else {
-                        if (row.data().ip) {
-                            // Open this row
-                            row.child(format1(row.data())).show();
-                            $(this).addClass('shown');
-                        } else {
-                            alert("none");
-                        }
-                    }
-                });
-
-                $('#example tbody').on('click', 'td.details-control-2', function () {
-                    var tr = $(this).closest('tr');
-                    var row = table.row(tr);
-
-                    if (row.child.isShown()) {
-                        // This row is already open - close it
-                        row.child.hide();
-                        $(this).removeClass('shown');
-                    }
-                    else {
-                        // Open this row
-                        if (row.data().tcp) {
-                            row.child(format2(row.data())).show();
-                            $(this).addClass('shown');
-                        } else {
-                            alert("none");
-                        }
-                    }
-                });
-            });
-        style(type='text/css').
-            td.details-control {
-                background: url('/images/details_open.png') no-repeat center center;
-                cursor: pointer;
-            }
-
-            td.details-control-1 {
-                background: url('/images/details_open.png') no-repeat center center;
-                cursor: pointer;
-            }
-
-            td.details-control-2 {
-                background: url('/images/details_open.png') no-repeat center center;
-                cursor: pointer;
-            }
-
-            td.shown {
-                background: url('/images/details_close.png') no-repeat center center;
-            }
+        script(src='//code.highcharts.com/highcharts.js')
+        script(src='//code.highcharts.com/highcharts-3d.js')
+        script(src='//code.highcharts.com/modules/exporting.js')
+        script(src='javascripts/dashboard.js')
