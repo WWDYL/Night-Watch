@@ -28,12 +28,14 @@ html(lang='zh-CN')
                                 input.form-control(type="text", placeholder="搜索...")
                             button.fm(type="submit")
                                 span.adn.glyphicon.glyphicon-search
-                            ul.nav.nav-stacked.of
+                            ul.nav.nav-stacked.of#navi
                                 li.tq Dashboards
                                 li.active
-                                    a(href="dashboard.html") table
+                                    a(href="#flows") Flows
                                 li
-                                    a(href="tables.html") chart
+                                    a(href="#flowheader") Flow Header Detection
+                                li
+                                    a(href="#trafficpattern") Traffic Pattern Detection
                 .hc.aps
                     .apa
                         .apb
@@ -48,25 +50,33 @@ html(lang='zh-CN')
                             //img.img-responsive(data-src='holder.js/200x200/auto/sky', alt='Generic placeholder thumbnail')
                             h4#container(min-width='310px',height='400px')
                             span.text-muted
-                    h2.sub-header 流量监测表
+                    h2.sub-header#flows 流量监测表
                     .table-responsive
                         table#example.table.table-bordered(cellpadding='0', cellspacing='0', border='0')
                             thead
                                 tr
-                                    th time
-                                    th caplen
-                                    th wirelen
-                                    th ethernet
-                                    th ip
-                                    th tcp
-                            tfoot
+                                    th 开始时间
+                                    th 结束时间
+                                    th 来源IP
+                                    th 来源端口
+                                    th 目的IP
+                                    th 目的端口
+                                    th 类型
+                                    th 包数量
+                                    th 包大小
+                    h2.sub-header#flowheader 流头部识别的可能攻击情况
+                    .table-responsive
+                        table#attack.table.table-bordered(cellpadding='0', cellspacing='0', border='0')
+                            thead
                                 tr
-                                    th time
-                                    th caplen
-                                    th wirelen
-                                    th ethernet
-                                    th ip
-                                    th tcp
+                                    th Attacker
+                                    th Victim
+                                    th Protocol
+                                    th Description
+                    h2.sub-header#trafficpattern 流量模型识别的可能攻击情况
+                    .table-responsive
+                        table#tp_attack.table.table-bordered(cellpadding='0', cellspacing='0', border='0')
+
 
         //
           Bootstrap core JavaScript

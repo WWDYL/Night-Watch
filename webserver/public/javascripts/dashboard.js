@@ -1,233 +1,256 @@
-$(function () {
-    $('#container').highcharts({
-        title: {
-            text: 'Combination chart'
-        },
-        xAxis: {
-            categories: ['Apples', 'Oranges', 'Pears', 'Bananas', 'Plums']
-        },
-        labels: {
-            items: [{
-                html: 'Total fruit consumption',
-                style: {
-                    left: '50px',
-                    top: '18px',
-                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
-                }
-            }]
-        },
-        series: [{
-            type: 'column',
-            name: 'Jane',
-            data: [3, 2, 1, 3, 4]
-        }, {
-            type: 'column',
-            name: 'John',
-            data: [2, 3, 5, 7, 6]
-        }, {
-            type: 'column',
-            name: 'Joe',
-            data: [4, 3, 3, 9, 0]
-        }, {
-            type: 'spline',
-            name: 'Average',
-            data: [3, 2.67, 3, 6.33, 3.33],
-            marker: {
-                lineWidth: 2,
-                lineColor: Highcharts.getOptions().colors[3],
-                fillColor: 'white'
-            }
-        }, {
-            type: 'pie',
-            name: 'Total consumption',
-            data: [{
-                name: 'Jane',
-                y: 13,
-                color: Highcharts.getOptions().colors[0] // Jane's color
-            }, {
-                name: 'John',
-                y: 23,
-                color: Highcharts.getOptions().colors[1] // John's color
-            }, {
-                name: 'Joe',
-                y: 19,
-                color: Highcharts.getOptions().colors[2] // Joe's color
-            }],
-            center: [100, 80],
-            size: 100,
-            showInLegend: false,
-            dataLabels: {
-                enabled: false
+$('#container').highcharts({
+    title: {
+        text: 'Combination chart'
+    },
+    xAxis: {
+        categories: ['Apples', 'Oranges', 'Pears', 'Bananas', 'Plums']
+    },
+    labels: {
+        items: [{
+            html: 'Total fruit consumption',
+            style: {
+                left: '50px',
+                top: '18px',
+                color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
             }
         }]
-    });
+    },
+    series: [{
+        type: 'column',
+        name: 'Jane',
+        data: [3, 2, 1, 3, 4]
+    }, {
+        type: 'column',
+        name: 'John',
+        data: [2, 3, 5, 7, 6]
+    }, {
+        type: 'column',
+        name: 'Joe',
+        data: [4, 3, 3, 9, 0]
+    }, {
+        type: 'spline',
+        name: 'Average',
+        data: [3, 2.67, 3, 6.33, 3.33],
+        marker: {
+            lineWidth: 2,
+            lineColor: Highcharts.getOptions().colors[3],
+            fillColor: 'white'
+        }
+    }, {
+        type: 'pie',
+        name: 'Total consumption',
+        data: [{
+            name: 'Jane',
+            y: 13,
+            color: Highcharts.getOptions().colors[0] // Jane's color
+        }, {
+            name: 'John',
+            y: 23,
+            color: Highcharts.getOptions().colors[1] // John's color
+        }, {
+            name: 'Joe',
+            y: 19,
+            color: Highcharts.getOptions().colors[2] // Joe's color
+        }],
+        center: [100, 80],
+        size: 100,
+        showInLegend: false,
+        dataLabels: {
+            enabled: false
+        }
+    }]
 });
-    function format(d) {
-    // `d` is the original data object for the row
-    return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
-        '<tr>' +
-        '<td>Ethernet:</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td>Src:</td>' +
-        '<td>' + d.ethernet.src + '</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td>Dst:</td>' +
-        '<td>' + d.ethernet.dst + '</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td>Length:</td>' +
-        '<td>' + d.ethernet.length + '</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td>Offset:</td>' +
-        '<td>' + d.ethernet.offset + '</td>' +
-        '</tr>' +
-        '</table>';
-}
+//     function format(d) {
+//     // `d` is the original data object for the row
+//     return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+//         '<tr>' +
+//         '<td>Ethernet:</td>' +
+//         '</tr>' +
+//         '<tr>' +
+//         '<td>Src:</td>' +
+//         '<td>' + d.ethernet.src + '</td>' +
+//         '</tr>' +
+//         '<tr>' +
+//         '<td>Dst:</td>' +
+//         '<td>' + d.ethernet.dst + '</td>' +
+//         '</tr>' +
+//         '<tr>' +
+//         '<td>Length:</td>' +
+//         '<td>' + d.ethernet.length + '</td>' +
+//         '</tr>' +
+//         '<tr>' +
+//         '<td>Offset:</td>' +
+//         '<td>' + d.ethernet.offset + '</td>' +
+//         '</tr>' +
+//         '</table>';
+// }
+//
+// function format1(d) {
+//     // `d` is the original data object for the row
+//     return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+//         '<tr>' +
+//         '<td>Ip:</td>' +
+//         '</tr>' +
+//         '<tr>' +
+//         '<td>Src:</td>' +
+//         '<td>' + d.ip.src + '</td>' +
+//         '</tr>' +
+//         '<tr>' +
+//         '<td>Dst:</td>' +
+//         '<td>' + d.ip.dst + '</td>' +
+//         '</tr>' +
+//         '<tr>' +
+//         '<td>Length:</td>' +
+//         '<td>' + d.ip.length + '</td>' +
+//         '</tr>' +
+//         '<tr>' +
+//         '<td>Offset:</td>' +
+//         '<td>' + d.ip.offset + '</td>' +
+//         '</tr>' +
+//         '</table>';
+// }
+//
+// function format2(d) {
+//     // `d` is the original data object for the row
+//     return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+//         '<tr>' +
+//         '<td>Tcp:</td>' +
+//         '</tr>' +
+//         '<tr>' +
+//         '<td>Src:</td>' +
+//         '<td>' + d.tcp.src + '</td>' +
+//         '</tr>' +
+//         '<tr>' +
+//         '<td>Dst:</td>' +
+//         '<td>' + d.tcp.dst + '</td>' +
+//         '</tr>' +
+//         '<tr>' +
+//         '<td>Ack:</td>' +
+//         '<td>' + d.tcp.ack + '</td>' +
+//         '</tr>' +
+//         '<tr>' +
+//         '<td>Rst:</td>' +
+//         '<td>' + d.tcp.rst + '</td>' +
+//         '</tr>' +
+//         '<tr>' +
+//         '<td>Syn:</td>' +
+//         '<td>' + d.tcp.syn + '</td>' +
+//         '</tr>' +
+//         '<tr>' +
+//         '<td>Fin:</td>' +
+//         '<td>' + d.tcp.fin + '</td>' +
+//         '</tr>' +
+//         '</table>';
+// }
+// $(document).ready(function () {
+// var table = $('#example').DataTable({
+//     destroy: true,
+//     "ajax": "/api/attacks",
+//     "columns": [
+//         {"data": 'timestamp'},
+//         {"data": "caplen"},
+//         {"data": "wirelen"},
+//         {
+//             "className": 'details-control',
+//             "orderable": false,
+//             "data": null,
+//             "defaultContent": ''
+//         },
+//         {
+//             "className": 'details-control-1',
+//             "orderable": false,
+//             "data": null,
+//             "defaultContent": ''
+//         },
+//         {
+//             "className": 'details-control-2',
+//             "orderable": false,
+//             "data": null,
+//             "defaultContent": ''
+//         }
+//     ],
+//     "order": [[1, 'asc']]
+// });
+// // Add event listener for opening and closing details
+// $('#example tbody').on('click', 'td.details-control', function () {
+//     var tr = $(this).closest('tr');
+//     var row = table.row(tr);
+//
+//     if (row.child.isShown()) {
+//         // This row is already open - close it
+//         row.child.hide();
+//         $(this).removeClass('shown');
+//     }
+//     else {
+//         // Open this row
+//
+//         row.child(format(row.data())).show();
+//         $(this).addClass('shown');
+//     }
+// });
+//
+// $('#example tbody').on('click', 'td.details-control-1', function () {
+//     var tr = $(this).closest('tr');
+//     var row = table.row(tr);
+//
+//     if (row.child.isShown()) {
+//         // This row is already open - close it
+//         row.child.hide();
+//         $(this).removeClass('shown');
+//     }
+//     else {
+//         if (row.data().ip) {
+//             // Open this row
+//             row.child(format1(row.data())).show();
+//             $(this).addClass('shown');
+//         } else {
+//             alert("none");
+//         }
+//     }
+// });
+//
+// $('#example tbody').on('click', 'td.details-control-2', function () {
+//     var tr = $(this).closest('tr');
+//     var row = table.row(tr);
+//
+//     if (row.child.isShown()) {
+//         // This row is already open - close it
+//         row.child.hide();
+//         $(this).removeClass('shown');
+//     }
+//     else {
+//         // Open this row
+//         if (row.data().tcp) {
+//             row.child(format2(row.data())).show();
+//             $(this).addClass('shown');
+//         } else {
+//             alert("none");
+//         }
+//     }
+// });
+var attack_table = $('#attack').DataTable({
+    "ajax": "/api/attacks",
+    "columns": [
+        {"data": 'Attacker'},
+        {"data": "Victim"},
+        {"data": "Protocol"},
+        {"data": "Description"}
+    ],
+    "order": [[1, 'asc']]
+});
 
-function format1(d) {
-    // `d` is the original data object for the row
-    return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
-        '<tr>' +
-        '<td>Ip:</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td>Src:</td>' +
-        '<td>' + d.ip.src + '</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td>Dst:</td>' +
-        '<td>' + d.ip.dst + '</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td>Length:</td>' +
-        '<td>' + d.ip.length + '</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td>Offset:</td>' +
-        '<td>' + d.ip.offset + '</td>' +
-        '</tr>' +
-        '</table>';
-}
-
-function format2(d) {
-    // `d` is the original data object for the row
-    return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
-        '<tr>' +
-        '<td>Tcp:</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td>Src:</td>' +
-        '<td>' + d.tcp.src + '</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td>Dst:</td>' +
-        '<td>' + d.tcp.dst + '</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td>Ack:</td>' +
-        '<td>' + d.tcp.ack + '</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td>Rst:</td>' +
-        '<td>' + d.tcp.rst + '</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td>Syn:</td>' +
-        '<td>' + d.tcp.syn + '</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td>Fin:</td>' +
-        '<td>' + d.tcp.fin + '</td>' +
-        '</tr>' +
-        '</table>';
-}
-$(document).ready(function () {
-    var table = $('#example').DataTable({
-        destroy: true,
-        "ajax": "/data/data.json",
-        "columns": [
-            {"data": 'timestamp'},
-            {"data": "caplen"},
-            {"data": "wirelen"},
-            {
-                "className": 'details-control',
-                "orderable": false,
-                "data": null,
-                "defaultContent": ''
-            },
-            {
-                "className": 'details-control-1',
-                "orderable": false,
-                "data": null,
-                "defaultContent": ''
-            },
-            {
-                "className": 'details-control-2',
-                "orderable": false,
-                "data": null,
-                "defaultContent": ''
-            }
-        ],
-        "order": [[1, 'asc']]
-    });
-    // Add event listener for opening and closing details
-    $('#example tbody').on('click', 'td.details-control', function () {
-        var tr = $(this).closest('tr');
-        var row = table.row(tr);
-
-        if (row.child.isShown()) {
-            // This row is already open - close it
-            row.child.hide();
-            $(this).removeClass('shown');
-        }
-        else {
-            // Open this row
-
-            row.child(format(row.data())).show();
-            $(this).addClass('shown');
-        }
-    });
-
-    $('#example tbody').on('click', 'td.details-control-1', function () {
-        var tr = $(this).closest('tr');
-        var row = table.row(tr);
-
-        if (row.child.isShown()) {
-            // This row is already open - close it
-            row.child.hide();
-            $(this).removeClass('shown');
-        }
-        else {
-            if (row.data().ip) {
-                // Open this row
-                row.child(format1(row.data())).show();
-                $(this).addClass('shown');
-            } else {
-                alert("none");
-            }
-        }
-    });
-
-    $('#example tbody').on('click', 'td.details-control-2', function () {
-        var tr = $(this).closest('tr');
-        var row = table.row(tr);
-
-        if (row.child.isShown()) {
-            // This row is already open - close it
-            row.child.hide();
-            $(this).removeClass('shown');
-        }
-        else {
-            // Open this row
-            if (row.data().tcp) {
-                row.child(format2(row.data())).show();
-                $(this).addClass('shown');
-            } else {
-                alert("none");
-            }
-        }
-    });
+var flow_table = $('#example').DataTable({
+    // destroy: true,
+   "ajax": '/api/flows',
+    "columns": [
+        {"data": 'BeginTime'},
+        {"data": 'EndTime'},
+        {"data": 'SrcIP'},
+        {"data": 'SrcPort'},
+        {"data": 'DstIP'},
+        {"data": 'DstPort'},
+        {"data": 'Type'},
+        {"data": 'PacketNum'},
+        {"data": 'PacketSize'}
+    ]
 });

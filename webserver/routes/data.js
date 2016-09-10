@@ -12,7 +12,7 @@ router.get('/', function(req, res) {
     var url = "mongodb://localhost:27017/mydb";
     co(function*(){
         var db = yield MongoClient.connect(url);
-        var collection = db.collection('traffic');
+        var collection = db.collection('flows');
         var documents = yield collection.find().toArray();
         var jsondata = { "data": [] };
 

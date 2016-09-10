@@ -634,3 +634,7 @@ hr {
   box-sizing: content-box;
   height: 0;
 }
+
+#navi {
+  position: fixed;
+}

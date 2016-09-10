@@ -9,7 +9,7 @@ var routes = require('./routes/index');
 var dashboard = require('./routes/dashboard');
 var users = require('./routes/users');
 var tables = require('./routes/tables');
-var trafficData = require('./routes/data');
+var flows = require('./routes/data');
 var attackData = require('./routes/attacks');
 
 var app = express();
@@ -30,7 +30,7 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/tables', tables);
 app.use('/dashboard', dashboard);
-app.use("/api/trafficData", trafficData);
+app.use("/api/flows", flows);
 app.use("/api/attacks", attackData);
 
 // catch 404 and forward to error handler
