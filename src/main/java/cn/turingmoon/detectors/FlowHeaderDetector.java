@@ -47,9 +47,13 @@ public class FlowHeaderDetector {
     private void recordAttackType(Flow flow, AttackType type) {
         RedisUtils utils = RedisUtils.getInstance();
         Jedis jedis = utils.getJedis();
-        Long id = jedis.incr("attack:");
-        String attack_id = "attack:" + id;
-        jedis.hset(attack_id, "Type", type.name());
+        Long id = jedis.incr("fh_attack:");
+        String attack_id = "fh_attack:" + id;
+        jedis.hset(attack_id, "Attacker", flow.getsIP());
+        jedis.hset(attack_id, "Victim", flow.getdIP());
+        jedis.hset(attack_id, "Protocol", flow.getType());
+        jedis.hset(attack_id, "Description", type.name());
+
     }
 
     private void detect(Flow flow) {
@@ -74,7 +78,7 @@ public class FlowHeaderDetector {
             if (isLarge(flow.getpNum()) && isLarge(flow.getpSize())) {
                 recordAttackType(flow, AttackType.UDP_flooding);
             }
-        } else if (flow.getType().equals(FlowType.ICMP_Echo)) {
+        } else if (flow.getType().equals(FlowType.ICMP_Echo_Request)) {
             if (isBroadcastAddr(flow.getdIP())) {
                 recordAttackType(flow, AttackType.Smurf);
             }
@@ -99,7 +103,7 @@ public class FlowHeaderDetector {
                     detect(tempflow);
                     begin_time = tempflow.getbTime();
                 }
-                System.out.println("NUM: " + num);
+                System.err.println("NUM: " + num);
             }
         }, 60000, 60000, TimeUnit.MILLISECONDS);
     }

@@ -6,10 +6,11 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
-var dashboard = require('./routes/dashboard.js');
+var dashboard = require('./routes/dashboard');
 var users = require('./routes/users');
 var tables = require('./routes/tables');
 var trafficData = require('./routes/data');
+var attackData = require('./routes/attacks');
 
 var app = express();
 
@@ -30,6 +31,7 @@ app.use('/users', users);
 app.use('/tables', tables);
 app.use('/dashboard', dashboard);
 app.use("/api/trafficData", trafficData);
+app.use("/api/attacks", attackData);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

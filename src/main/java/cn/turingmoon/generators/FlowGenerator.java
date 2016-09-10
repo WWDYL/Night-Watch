@@ -1,6 +1,7 @@
 package cn.turingmoon.generators;
 
 import cn.turingmoon.LocalStorage;
+import cn.turingmoon.constants.FlowType;
 import cn.turingmoon.models.Flow;
 import org.jnetpcap.packet.JPacket;
 import org.jnetpcap.packet.format.FormatUtils;
@@ -30,7 +31,7 @@ public class FlowGenerator {
         return generator;
     }
 
-    public void handlePacket(JPacket packet) {
+    void handlePacket(JPacket packet) {
         temp = new Flow();
         if (packet.hasHeader(ip4)) {
             ip4Handler(ip4);
@@ -80,6 +81,7 @@ public class FlowGenerator {
         temp.setdIP(dstIp);
     }
 
+//    TODO: add ipv6 support
 //    private void ip6Handler(Ip6 ip) {
 //        String srcIp = FormatUtils.ip(ip.source());
 //        String dstIp = FormatUtils.ip(ip.destination());
@@ -93,7 +95,15 @@ public class FlowGenerator {
         int type = icmp.type();
         int code = icmp.code();
 //        System.out.printf("ICMP: type: %d code: %d\n", type, code);
-        temp.setType(Integer.toString(type));
+        if (code == 0) {
+            if (type == 8) {
+                // Ping echo request
+                temp.setType(FlowType.ICMP_Echo_Request);
+            } else if (type == 0) {
+                // Ping echo response
+                temp.setType(FlowType.ICMP_Echo_Response);
+            }
+        }
     }
 
     private void tcpHandler(Tcp tcp) {
@@ -106,7 +116,13 @@ public class FlowGenerator {
 //        System.out.printf("TCP: %s -> %s %b %b %b %b\n", srcPort, dstPort, ack, rst, syn, fin);
         temp.setsPort(srcPort);
         temp.setdPort(dstPort);
-        temp.setType("TCP");
+        if (syn) {
+            temp.setType(FlowType.SYN);
+        } else if (fin) {
+            temp.setType(FlowType.FIN);
+        } else {
+            temp.setType(FlowType.TCP);
+        }
     }
 
     private void udpHandler(Udp udp) {
@@ -116,7 +132,7 @@ public class FlowGenerator {
 //        System.out.printf("UDP: len: %d %s -> %s\n", length, srcPort, dstPort);
         temp.setsPort(srcPort);
         temp.setdPort(dstPort);
-        temp.setType("UDP");
+        temp.setType(FlowType.UDP);
     }
 
 }

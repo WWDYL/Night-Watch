@@ -43,7 +43,7 @@ public class TrafficPatternDataGenerator {
             flow_num++;
             if (type == 1) {
                 ips_stats.add(doc.getString("DstIP"));
-            } else if (type == 2) {
+            } else {
                 ips_stats.add(doc.getString("SrcIP"));
             }
             dport_stats.add(doc.getString("DstPort"));
@@ -76,7 +76,7 @@ public class TrafficPatternDataGenerator {
         ip_num = ips_stats.size();
         if (type == 1) {
             pattern.setDstIP_num(ip_num);
-        } else if (type == 2) {
+        } else {
             pattern.setSrcIP_num(ip_num);
         }
 

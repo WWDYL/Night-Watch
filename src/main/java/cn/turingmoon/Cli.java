@@ -15,6 +15,7 @@ public class Cli {
 
     static {
         options.addOption("h", "help", false, "The command help");
+        options.addOption("r", "run", false, "Run this program");
         options.addOption("f", "file", false, "filename");
         options.addOption("s", "server", false, "Start a web presenter");
         options.addOption("v", "version", false, "Display software version");
@@ -44,20 +45,22 @@ public class Cli {
 
             String filename = cl.getOptionValue("file");
 
-            new Thread(new Runnable() {
-                public void run() {
-                    PacketCapturer capturer = new PacketCapturer();
-                    capturer.start();
-                }
-            }).start();
-            FlowStore store = new FlowStore();
-            store.run();
+            if (cl.hasOption("r")) {
+                new Thread(new Runnable() {
+                    public void run() {
+                        PacketCapturer capturer = new PacketCapturer();
+                        capturer.start();
+                    }
+                }).start();
+                FlowStore store = new FlowStore();
+                store.run();
 
-            FlowHeaderDetector flowDect = new FlowHeaderDetector();
-            flowDect.run();
+                FlowHeaderDetector flowDect = new FlowHeaderDetector();
+                flowDect.run();
 
-            TrafficPatternDetector trafficDect = new TrafficPatternDetector();
-            trafficDect.run();
+                TrafficPatternDetector trafficDect = new TrafficPatternDetector();
+                trafficDect.run();
+            }
 
             if (cl.hasOption("s")) {
                 Runtime run = Runtime.getRuntime();

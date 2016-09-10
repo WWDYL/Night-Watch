@@ -7,6 +7,7 @@ import org.bson.Document;
 import java.awt.font.TransformAttribute;
 
 public class TrafficPattern {
+    private int Duration;
     private int Flow_num;
     private int SrcIP_num;
     private int DstIP_num;
@@ -21,6 +22,10 @@ public class TrafficPattern {
     private float Packet_num_dev;
     private int SYN_num;
     private int ACK_num;
+
+    public int getDuration() { return Duration; }
+
+    public void setDuration(int duration) { Duration = duration; }
 
     public int getFlow_num() {
         return Flow_num;
