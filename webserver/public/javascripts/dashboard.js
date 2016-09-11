@@ -1,4 +1,9 @@
+$('#datetimepicker').datetimepicker({
+    language: 'zh-CN'
+});
+
 $('#container').highcharts({
+
     title: {
         text: 'Combination chart'
     },

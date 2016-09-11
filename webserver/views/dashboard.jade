@@ -13,6 +13,7 @@ html(lang='zh-CN')
         link(href='bootstrap/css/bootstrap-responsive.min.css', rel='stylesheet', media='screen')
         link(href='stylesheets/dashboard.css', rel='stylesheet')
         link(href='stylesheets/mydatatables.css', rel='stylesheet')
+        link(href='stylesheets/bootstrap-datetimepicker.min.css', rel='stylesheet')
     body
         .bw
             .fu
@@ -42,7 +43,7 @@ html(lang='zh-CN')
                             h2.apc NightWatch —— 网络异常流量检测系统
                         .ob.ape
                             .tn.aol
-                                input.form-control(type="text", value="01/01/15 - 12/31/15", data-provide="datepicker")
+                                input.form-control#datetimepicker(type="text", value="2016-09-10 12:00", data-date-format="yyyy-mm-dd hh:ii")
                     hr
                     h2.sub-header 流量监测图
                     .row.placeholders
@@ -86,6 +87,8 @@ html(lang='zh-CN')
         script(src='bootstrap/js/bootstrap.min.js')
         script(src='vendors/modernizr-2.6.2-respond-1.1.0.min.js')
         script(src='vendors/datatables/js/jquery.dataTables.min.js')
+        script(src='javascripts/datetimepicker/bootstrap-datetimepicker.min.js')
+        script(src='javascripts/datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js')
         script(src='//code.highcharts.com/highcharts.js')
         script(src='//code.highcharts.com/highcharts-3d.js')
         script(src='//code.highcharts.com/modules/exporting.js')
