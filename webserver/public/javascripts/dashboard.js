@@ -259,3 +259,12 @@ var flow_table = $('#example').DataTable({
         {"data": 'PacketSize'}
     ]
 });
+var attack2_table = $('#tp_attack').DataTable({
+   "ajax": "/api/tp_attacks",
+    "columns": [
+        {"data": ''},
+        {"data": ''},
+        {"data": ''},
+        {"data": ''}
+    ]
+});

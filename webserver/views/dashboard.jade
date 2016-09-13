@@ -14,6 +14,7 @@ html(lang='zh-CN')
         link(href='stylesheets/dashboard.css', rel='stylesheet')
         link(href='stylesheets/mydatatables.css', rel='stylesheet')
         link(href='stylesheets/bootstrap-datetimepicker.min.css', rel='stylesheet')
+        link(href='stylesheets/dropdown-menu.css', rel='stylesheet')
     body
         .bw
             .fu
@@ -77,8 +78,39 @@ html(lang='zh-CN')
                     h2.sub-header#trafficpattern 流量模型识别的可能攻击情况
                     .table-responsive
                         table#tp_attack.table.table-bordered(cellpadding='0', cellspacing='0', border='0')
-
-
+                .menu
+                    header.menu__header
+                        h1.menu__header-title 消息
+                    .menu__body
+                        ul.mitems
+                            li.nav__item
+                                a.nav__item-link.is-active(href='#')
+                                    i.fa.fa-envelope.nav__item-icon
+                                    span.nav__item-text News
+                                    span.badge.badge--warning 32
+                            li.nav__item
+                                a.nav__item-link(href='#')
+                                    i.fa.fa-flag.nav__item-icon
+                                    span.nav__item-text Priority
+                                    span.badge 8
+                            li.nav__item
+                                a.nav__item-link(href='#')
+                                    i.fa.fa-space-shuttle.nav__item-icon
+                                    span.nav__item-text Assigned
+                                    span.badge 0/17
+                            li.nav__item
+                                a.nav__item-link(href='#')
+                                    i.fa.fa-archive.nav__item-icon
+                                    span.nav__item-text Archived
+                                    span.badge 3
+                            li.nav__item
+                                a.nav__item-link(href='#')
+                                    i.fa.fa-trash.nav__item-icon
+                                    span.nav__item-text Deleted
+                                    span.badge 9
+                            li.nav__item
+                                a.nav__item-link(href='#')
+                                    span.nav__item-text Show all
         //
           Bootstrap core JavaScript
           ==================================================
