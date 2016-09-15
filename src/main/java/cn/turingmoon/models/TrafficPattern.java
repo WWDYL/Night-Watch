@@ -5,9 +5,11 @@ import cn.turingmoon.constants.FlowType;
 import org.bson.Document;
 
 import java.awt.font.TransformAttribute;
+import java.util.Date;
 
 public class TrafficPattern {
-    private int Duration;
+    private Date BeginTime;
+    private long Duration;
     private int Flow_num;
     private int SrcIP_num;
     private int DstIP_num;
@@ -23,9 +25,13 @@ public class TrafficPattern {
     private int SYN_num;
     private int ACK_num;
 
-    public int getDuration() { return Duration; }
+    public Date getBeginTime() { return BeginTime; }
 
-    public void setDuration(int duration) { Duration = duration; }
+    public void setBeginTime(Date date) { BeginTime = date; }
+
+    public long getDuration() { return Duration; }
+
+    public void setDuration(long duration) { Duration = duration; }
 
     public int getFlow_num() {
         return Flow_num;

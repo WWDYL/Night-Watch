@@ -45,6 +45,7 @@ public class MongoDbUtils {
     }
 
     public DistinctIterable<String> getDistinctValues(String col) {
+        // TODO: 按照时间排序
         DistinctIterable<String> res = flows.distinct(col, String.class);
         return res;
     }

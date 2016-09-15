@@ -5,6 +5,7 @@ import cn.turingmoon.models.TrafficPattern;
 import cn.turingmoon.utilities.RedisUtils;
 import redis.clients.jedis.Jedis;
 
+import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -14,6 +15,8 @@ public class TrafficPatternDetector {
 
     private ScheduledExecutorService scheduExec = null;
     private Jedis jedis = null;
+
+    private int cycle = LocalStorage.CYCLE_TIME;
 
     public TrafficPatternDetector() {
         scheduExec = Executors.newScheduledThreadPool(2);
@@ -65,11 +68,11 @@ public class TrafficPatternDetector {
         return true;
     }
 
-    private boolean isScanning(TrafficPattern pattern) {
+    private boolean isScanning(TrafficPattern pattern, int type) {
         int v_n_flow = pattern.getFlow_num() / ScanningValue.t_n_flow;
         float v_l_flow = ScanningValue.t_l_flow / pattern.getFlow_size_avr();
         float v_n_packet = ScanningValue.t_n_packet / pattern.getPacket_num_avr();
-        int v_ip = ScanningValue.t_ip / pattern.getSrcIP_num();
+        int v_ip = ScanningValue.t_ip / (type == 2 ? pattern.getSrcIP_num() : pattern.getDstIP_num());
         int v_port = pattern.getDstPort_num() / ScanningValue.t_port;
 
         double f_scan = v_n_flow * ScanningValue.w_n_flow +
@@ -77,6 +80,7 @@ public class TrafficPatternDetector {
                         v_n_packet * ScanningValue.w_n_packet +
                         v_ip * ScanningValue.w_ip +
                         v_port * ScanningValue.w_port;
+        System.out.println(f_scan);
         return isLarge(f_scan);
     }
 
@@ -92,6 +96,7 @@ public class TrafficPatternDetector {
                 v_n_packet * SYNFloodingValue.w_n_packet +
                 v_port * SYNFloodingValue.w_port +
                 v_syn_ack * SYNFloodingValue.w_syn_ack;
+        System.out.println(f_syn);
         return isLarge(f_syn);
     }
 
@@ -102,10 +107,16 @@ public class TrafficPatternDetector {
         jedis.hset(attack_id, "Description", type);
 
         jedis.hset(attack_id, "Attacker", key);
+
         jedis.hset(attack_id, "Protocol", tp.getProto());
-        jedis.hset(attack_id, "Flows/s", Integer.toString(tp.getFlow_num() / tp.getDuration()));
-        jedis.hset(attack_id, "Packets/s", Integer.toString(tp.getPacket_num_sum() / tp.getDuration()));
-        jedis.hset(attack_id, "Bytes/s", Integer.toString(tp.getFlow_size_sum() / tp.getDuration()));
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        jedis.hset(attack_id, "BeginTime", sdf.format(tp.getBeginTime()));
+        jedis.hset(attack_id, "Duration", Long.toString(tp.getDuration()));
+
+        jedis.hset(attack_id, "Flows/s", Float.toString(tp.getFlow_num() / (float)tp.getDuration()));
+        jedis.hset(attack_id, "Packets/s", Float.toString(tp.getPacket_num_sum() / (float)tp.getDuration()));
+        jedis.hset(attack_id, "Bytes/s", Float.toString(tp.getFlow_size_sum() / (float)tp.getDuration()));
     }
 
     private void recordDstAttack(String key, TrafficPattern tp, String type) {
@@ -116,39 +127,28 @@ public class TrafficPatternDetector {
 
         jedis.hset(attack_id, "Victim", key);
         jedis.hset(attack_id, "Protocol", tp.getProto());
-        jedis.hset(attack_id, "Flows/s", Integer.toString(tp.getFlow_num() / tp.getDuration()));
-        jedis.hset(attack_id, "Packets/s", Integer.toString(tp.getPacket_num_sum() / tp.getDuration()));
-        jedis.hset(attack_id, "Bytes/s", Integer.toString(tp.getFlow_size_sum() / tp.getDuration()));
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        jedis.hset(attack_id, "BeginTime", sdf.format(tp.getBeginTime()));
+        jedis.hset(attack_id, "Duration", Long.toString(tp.getDuration()));
+
+        jedis.hset(attack_id, "Flows/s", Float.toString(tp.getFlow_num() / (float)tp.getDuration()));
+        jedis.hset(attack_id, "Packets/s", Float.toString(tp.getPacket_num_sum() / (float)tp.getDuration()));
+        jedis.hset(attack_id, "Bytes/s", Float.toString(tp.getFlow_size_sum() / (float)tp.getDuration()));
     }
 
     public void detect(String key, TrafficPattern pattern, int type) {
-        if (type == 1) {
+        if (type == 2) {
             if (isLarge(pattern.getFlow_num()) && isSmall(pattern.getFlow_size_avr()) && isSmall(pattern.getPacket_num_avr())) {
                 if (isLarge(pattern.getDstPort_num()) && isSmall(pattern.getSrcIP_num())) {
-                    if (isScanning(pattern)) {
+                    if (isScanning(pattern, 2)) {
                         System.out.println("host scanning");
-                        recordSrcAttack(key, pattern, "host scanning");
+                        recordDstAttack(key, pattern, "host scanning");
                     }
                 }
                 if (isSmall(pattern.getDstPort_num()) && isSmall(pattern.getACK_num() / pattern.getSYN_num())) {
                     System.out.println("TCP SYN flood");
-                    recordSrcAttack(key, pattern, "TCP SYN flood");
-                }
-            }
-            if (isLarge(pattern.getPacket_num_sum()) && isLarge(pattern.getFlow_size_sum())) {
-                System.out.println("(ICMP, UDP, TCP) flooding");
-                if (isSYNflooding(pattern)) {
-                    System.out.println("SYN flooding");
-                }
-                recordSrcAttack(key, pattern, "(ICMP UDP TCP) flooding");
-            }
-        } else if (type == 2) {
-            if (isLarge(pattern.getFlow_num()) && isSmall(pattern.getFlow_size_avr()) && isSmall(pattern.getPacket_num_avr())) {
-                if (isLarge(pattern.getDstIP_num()) && isSmall(pattern.getDstPort_num())) {
-                    if (isScanning(pattern)) {
-                        System.out.println("network scanning");
-                        recordDstAttack(key, pattern, "network scanning");
-                    }
+                    recordDstAttack(key, pattern, "TCP SYN flood");
                 }
             }
             if (isLarge(pattern.getPacket_num_sum()) && isLarge(pattern.getFlow_size_sum())) {
@@ -157,6 +157,22 @@ public class TrafficPatternDetector {
                     System.out.println("SYN flooding");
                 }
                 recordDstAttack(key, pattern, "(ICMP UDP TCP) flooding");
+            }
+        } else {
+            if (isLarge(pattern.getFlow_num()) && isSmall(pattern.getFlow_size_avr()) && isSmall(pattern.getPacket_num_avr())) {
+                if (isLarge(pattern.getDstIP_num()) && isSmall(pattern.getDstPort_num())) {
+                    if (isScanning(pattern, 1)) {
+                        System.out.println("network scanning");
+                        recordSrcAttack(key, pattern, "network scanning");
+                    }
+                }
+            }
+            if (isLarge(pattern.getPacket_num_sum()) && isLarge(pattern.getFlow_size_sum())) {
+                System.out.println("(ICMP, UDP, TCP) flooding");
+                if (isSYNflooding(pattern)) {
+                    System.out.println("SYN flooding");
+                }
+                recordSrcAttack(key, pattern, "(ICMP UDP TCP) flooding");
             }
         }
     }
@@ -176,6 +192,6 @@ public class TrafficPatternDetector {
                 }
 
             }
-        }, 60000, 60000, TimeUnit.MILLISECONDS);
+        }, cycle, cycle, TimeUnit.SECONDS);
     }
 }

@@ -15,6 +15,8 @@ public class FlowStore {
 
     private ScheduledExecutorService scheduExec;
 
+    private int cycle = LocalStorage.CYCLE_TIME;
+
     public FlowStore() {
         this.scheduExec = Executors.newScheduledThreadPool(2);
     }
@@ -33,6 +35,6 @@ public class FlowStore {
                 dbUtils.storeSomeRecord(docs);
                 LocalStorage.tempFlows.clear();
             }
-        }, 60000, 60000, TimeUnit.MILLISECONDS);
+        }, cycle, cycle, TimeUnit.SECONDS);
     }
 }

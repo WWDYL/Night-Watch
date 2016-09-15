@@ -30,6 +30,8 @@ public class TrafficPatternDataGenerator {
         // float np_dev = 0;
         int syn_n = 0;
         int ack_n = 0;
+        Date begin_time = null, end_time = null;
+        long during_time;
 
         List<Document> docs = null;
         if (type == 1) {
@@ -40,6 +42,18 @@ public class TrafficPatternDataGenerator {
 
         assert docs != null;
         for (Document doc : docs) {
+            if (begin_time == null) {
+                begin_time = doc.getDate("BeginTime");
+            } else {
+                begin_time = new Date(Math.min(begin_time.getTime(), doc.getDate("BeginTime").getTime()));
+            }
+
+            if (end_time == null) {
+                end_time = doc.getDate("EndTime");
+            } else {
+                end_time = new Date(Math.max(end_time.getTime(), doc.getDate("EndTime").getTime()));
+            }
+
             flow_num++;
             if (type == 1) {
                 ips_stats.add(doc.getString("DstIP"));
@@ -64,6 +78,10 @@ public class TrafficPatternDataGenerator {
                 ack_n++;
             }
         }
+
+
+        during_time = (end_time.getTime() - begin_time.getTime()) / 1000;
+
         fs_avr = fs_sum / flow_num;
 
         np_avr = np_sum / flow_num;
@@ -71,6 +89,10 @@ public class TrafficPatternDataGenerator {
         /* TODO: add deviation. */
 
         TrafficPattern pattern = new TrafficPattern();
+
+        pattern.setBeginTime(begin_time);
+        pattern.setDuration(during_time);
+
         pattern.setFlow_num(flow_num);
 
         ip_num = ips_stats.size();

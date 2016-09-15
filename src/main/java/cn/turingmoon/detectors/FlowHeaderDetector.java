@@ -23,6 +23,8 @@ public class FlowHeaderDetector {
     private ScheduledExecutorService scheduExec;
     private Date begin_time = new Date(0);
 
+    private int cycle = LocalStorage.CYCLE_TIME;
+
     public FlowHeaderDetector() {
         scheduExec = Executors.newScheduledThreadPool(2);
     }
@@ -105,7 +107,7 @@ public class FlowHeaderDetector {
                 }
                 System.err.println("NUM: " + num);
             }
-        }, 60000, 60000, TimeUnit.MILLISECONDS);
+        }, cycle, cycle, TimeUnit.SECONDS);
     }
 
 }

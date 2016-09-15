@@ -23,7 +23,7 @@ html(lang='zh-CN')
                         .aon
                             button.amy.amz.aoo(type="button", data-toggle="collapse", data-target="#nav-toggleable-sm")
                                 span.ct Toggle nav
-                            a.aop.cn(href="index.html")
+                            a.aop.cn(href="/")
                                 span.bv.act.aoq.glyphicon.glyphicon-dashboard
                         .collapse.sidebar
                             form.search
@@ -71,16 +71,27 @@ html(lang='zh-CN')
                         table#attack.table.table-bordered(cellpadding='0', cellspacing='0', border='0')
                             thead
                                 tr
-                                    th Attacker
-                                    th Victim
-                                    th Protocol
-                                    th Description
+                                    th 攻击者
+                                    th 受攻击者
+                                    th 协议
+                                    th 攻击描述
                     h2.sub-header#trafficpattern 流量模型识别的可能攻击情况
                     .table-responsive
                         table#tp_attack.table.table-bordered(cellpadding='0', cellspacing='0', border='0')
+                    h2.sub-header#sourcebased Source Based
+                    .table-responsive
+                        table#src_attack.table.table-bordered(cellpadding='0', cellspacing='0', border='0')
+                            thead
+                                tr
+                                    th 开始时间
+                                    th 攻击者
+                                    th 协议
+                                    th Flows/s
+                                    th Packets/s
+                                    th Bytes/s
                 .menu
                     header.menu__header
-                        h1.menu__header-title 消息
+                        h1.menu__header-title 及时消息
                     .menu__body
                         ul.mitems
                             li.nav__item
@@ -124,4 +135,5 @@ html(lang='zh-CN')
         script(src='//code.highcharts.com/highcharts.js')
         script(src='//code.highcharts.com/highcharts-3d.js')
         script(src='//code.highcharts.com/modules/exporting.js')
+        script(src='/socket.io/socket.io.js')
         script(src='javascripts/dashboard.js')

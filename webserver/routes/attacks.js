@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var redis = require('redis'),
     client = redis.createClient();
-var co = require('co');
 
 client.on('error', function(err) {
     console.log('redis is error!');

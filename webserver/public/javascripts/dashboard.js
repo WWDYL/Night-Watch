@@ -259,12 +259,31 @@ var flow_table = $('#example').DataTable({
         {"data": 'PacketSize'}
     ]
 });
-var attack2_table = $('#tp_attack').DataTable({
-   "ajax": "/api/tp_attacks",
+// var attack2_table = $('#tp_attack').DataTable({
+//    "ajax": "/api/tp_attacks",
+//     "columns": [
+//         {"data": ''},
+//         {"data": ''},
+//         {"data": ''},
+//         {"data": ''}
+//     ]
+// });
+
+var src_attack = $('#src_attack').DataTable({
+   "ajax": "/api/src_attacks",
     "columns": [
-        {"data": ''},
-        {"data": ''},
-        {"data": ''},
-        {"data": ''}
+        {"data": 'BeginTime'},
+        {"data": 'Attacker'},
+        {"data": 'Protocol'},
+        {"data": 'Flows/s'},
+        {"data": 'Packets/s'},
+        {"data": 'Bytes/s'}
     ]
+});
+
+var attack2_table = $('#tp_attack').DataTable();
+
+var socket = io("http://localhost:3000");
+socket.on('attack', function(data) {
+    alert(data);
 });

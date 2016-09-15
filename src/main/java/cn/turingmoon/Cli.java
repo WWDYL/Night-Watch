@@ -11,7 +11,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 public class Cli {
-    static Options options = new Options();
+    static private Options options = new Options();
 
     static {
         options.addOption("h", "help", false, "The command help");
@@ -19,16 +19,22 @@ public class Cli {
         options.addOption("f", "file", false, "filename");
         options.addOption("s", "server", false, "Start a web presenter");
         options.addOption("v", "version", false, "Display software version");
+        options.addOption("d", "debug", false, "Debug mode");
     }
 
-    static void printVersion() {
+    static private void printVersion() {
         System.out.println("Night Watch\nAbnormal Traffic Detection System\nVersion: 0.5");
     }
 
-    static void printHelp() {
+    static private void printHelp() {
         HelpFormatter hf = new HelpFormatter();
         hf.printHelp("Night Watch", options);
     }
+
+    static private void debugMode() {
+        LocalStorage.CYCLE_TIME = 10;
+    }
+
 
     public static void main(String[] args) {
         CommandLineParser parser = new PosixParser();
@@ -43,7 +49,16 @@ public class Cli {
                 return;
             }
 
+            if (cl.hasOption("d")) {
+                LocalStorage.DEBUG = true;
+            }
+
+            if (LocalStorage.DEBUG) {
+                debugMode();
+            }
+
             String filename = cl.getOptionValue("file");
+            System.out.println(filename);
 
             if (cl.hasOption("r")) {
                 new Thread(new Runnable() {

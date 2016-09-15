@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 public class LocalStorage {
+    public static boolean DEBUG = false;
+    public static int CYCLE_TIME = 60;
     public static String BroadcastAddr = null;
     public static List<Flow> tempFlows = new ArrayList<Flow>();
     public static Map<String, TrafficPattern> source_based = new HashMap<String, TrafficPattern>();
