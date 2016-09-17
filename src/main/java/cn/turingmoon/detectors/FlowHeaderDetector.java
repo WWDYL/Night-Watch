@@ -23,6 +23,9 @@ public class FlowHeaderDetector {
 
     private ScheduledExecutorService scheduExec;
     private Date begin_time = new Date(0);
+    private long flows_sum = 0;
+    private long flows_psum = 0;
+    private long flows_psize = 0;
 
     private int cycle = LocalStorage.CYCLE_TIME;
 
@@ -30,12 +33,17 @@ public class FlowHeaderDetector {
         scheduExec = Executors.newScheduledThreadPool(8);
     }
 
-    private boolean isSmall(int num) {
-        return false;
+    private boolean pcIsLarge(int num) {
+        return num > 0.5 * flows_psum;
     }
 
-    private boolean isLarge(int num) {
-        return num > 200;
+    private boolean fsIsLarge(int num) {
+        return num > 0.5 * flows_psize;
+    }
+
+    private boolean percentIsLarge(float num) {
+        /* TODO: get the normal percentage. */
+        return num > 1;
     }
 
     private boolean isReflectingPort(String sPort) {
@@ -66,7 +74,7 @@ public class FlowHeaderDetector {
                 AttackRecorder.record(new AttackRecord(flow, AttackType.Land));
             }
             /* 检测是否是TCP flooding */
-            if (isLarge(flow.getpNum()) && isLarge(flow.getpSize())) {
+            if (pcIsLarge(flow.getpNum()) && fsIsLarge(flow.getpSize())) {
                 recordAttackType(flow, AttackType.TCP_flooding);
             }
         } else if (flow.getType().equals(FlowType.UDP)) {
@@ -80,7 +88,7 @@ public class FlowHeaderDetector {
                     AttackRecorder.record(new AttackRecord(flow, AttackType.Fraggle));
                 }
             }
-            if (isLarge(flow.getpNum()) && isLarge(flow.getpSize())) {
+            if (pcIsLarge(flow.getpNum()) && fsIsLarge(flow.getpSize())) {
                 recordAttackType(flow, AttackType.UDP_flooding);
             }
         } else if (flow.getType().equals(FlowType.ICMP_Echo_Request)) {
@@ -88,11 +96,11 @@ public class FlowHeaderDetector {
                 recordAttackType(flow, AttackType.Smurf);
                 AttackRecorder.record(new AttackRecord(flow, AttackType.Smurf));
             }
-            if (isLarge(flow.getpSize() / flow.getpNum())) {
+            if (percentIsLarge(flow.getpSize() / flow.getpNum())) {
                 recordAttackType(flow, AttackType.Ping_of_death);
                 AttackRecorder.record(new AttackRecord(flow, AttackType.Ping_of_death));
             }
-            if (isLarge(flow.getpSize()) && isLarge(flow.getpNum())) {
+            if (fsIsLarge(flow.getpSize()) && pcIsLarge(flow.getpNum())) {
                 recordAttackType(flow, AttackType.ICMP_flooding);
             }
         }
@@ -104,6 +112,17 @@ public class FlowHeaderDetector {
                 MongoDbUtils utils = MongoDbUtils.getInstance();
                 List<Document> flows = utils.getFlowRecords(gt("BeginTime", begin_time));
                 int num = 0;
+                /**
+                 *  This method is bad because it will cost some extra resources, but I haven't
+                 *  find a better way to implement the statistics. Remove this when you find a better
+                 *  way.
+                 *  TODO: find a better method to implement statistics function.
+                 */
+                for (Document document : flows) {
+                    flows_sum++;
+                    flows_psum += document.getInteger("PacketNum");
+                    flows_psize += document.getInteger("PacketSize");
+                }
                 for (Document document : flows) {
                     num++;
                     Flow tempflow = Flow.parseDocument(document);

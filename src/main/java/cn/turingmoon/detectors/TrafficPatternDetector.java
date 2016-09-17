@@ -50,25 +50,7 @@ public class TrafficPatternDetector {
         private static int t_n_packet = 1;
         private static int t_port = 1;
     }
-
-    private boolean isLarge(int num) {
-        return true;
-    }
-
-    private boolean isLarge(float num) {
-        return true;
-    }
-
-    private boolean isLarge(double num) { return true; }
-
-    private boolean isSmall(int num) {
-        return true;
-    }
-
-    private boolean isSmall(float num) {
-        return true;
-    }
-
+    
     private boolean isScanning(TrafficPattern pattern, int type) {
         int v_n_flow = pattern.getFlow_num() / ScanningValue.t_n_flow;
         float v_l_flow = ScanningValue.t_l_flow / pattern.getFlow_size_avr();
@@ -82,7 +64,11 @@ public class TrafficPatternDetector {
                         v_ip * ScanningValue.w_ip +
                         v_port * ScanningValue.w_port;
         System.out.println(f_scan);
-        return isLarge(f_scan);
+        return scanFuncIsLarge(f_scan);
+    }
+
+    private boolean scanFuncIsLarge(double f_scan) {
+        return true;
     }
 
     private boolean isSYNflooding(TrafficPattern pattern) {
@@ -98,7 +84,11 @@ public class TrafficPatternDetector {
                 v_port * SYNFloodingValue.w_port +
                 v_syn_ack * SYNFloodingValue.w_syn_ack;
         System.out.println(f_syn);
-        return isLarge(f_syn);
+        return SYNFuncisLarge(f_syn);
+    }
+
+    private boolean SYNFuncisLarge(double f_syn) {
+        return true;
     }
 
     private void recordSrcAttack(String key, TrafficPattern tp, String type) {
@@ -140,21 +130,21 @@ public class TrafficPatternDetector {
 
     public void detect(String key, TrafficPattern pattern, int type) {
         if (type == 2) {
-            if (isLarge(pattern.getFlow_num()) && isSmall(pattern.getFlow_size_avr()) && isSmall(pattern.getPacket_num_avr())) {
-                if (isLarge(pattern.getDstPort_num()) && isSmall(pattern.getSrcIP_num())) {
+            if (flowNumIsLarge(pattern.getFlow_num()) && flowSizeAvrIsSmall(pattern.getFlow_size_avr()) && packetNumAvgIsSmall(pattern.getPacket_num_avr())) {
+                if (dstPortNumIsLarge(pattern.getDstPort_num()) && srcIpNumIsSmall(pattern.getSrcIP_num())) {
                     recordDstAttack(key, pattern, "host scanning");
                     if (isScanning(pattern, 2)) {
                         System.out.println("host scanning");
                         AttackRecorder.record(new AttackRecord(2, key, pattern, "host scanning"));
                     }
                 }
-                if (isSmall(pattern.getDstPort_num()) && isSmall(pattern.getACK_num() / pattern.getSYN_num())) {
+                if (dstPortNumIsSmall(pattern.getDstPort_num()) && ACKDivSYNIsSmall(pattern.getACK_num() / pattern.getSYN_num())) {
                     System.out.println("TCP SYN flood");
                     recordDstAttack(key, pattern, "TCP SYN flood");
                     AttackRecorder.record(new AttackRecord(2, key, pattern, "TCP SYN flood"));
                 }
             }
-            if (isLarge(pattern.getPacket_num_sum()) && isLarge(pattern.getFlow_size_sum())) {
+            if (packetNumSumIsLarge(pattern.getPacket_num_sum()) && flowSizeSumIsLarge(pattern.getFlow_size_sum())) {
                 System.out.println("(ICMP, UDP, TCP) flooding");
                 if (isSYNflooding(pattern)) {
                     System.out.println("SYN flooding");
@@ -163,8 +153,9 @@ public class TrafficPatternDetector {
                 recordDstAttack(key, pattern, "(ICMP UDP TCP) flooding");
             }
         } else {
-            if (isLarge(pattern.getFlow_num()) && isSmall(pattern.getFlow_size_avr()) && isSmall(pattern.getPacket_num_avr())) {
-                if (isLarge(pattern.getDstIP_num()) && isSmall(pattern.getDstPort_num())) {
+
+            if (flowNumIsLarge(pattern.getFlow_num()) && flowSizeAvgIsSmall(pattern.getFlow_size_avr()) && packetNumAvgIsSmall(pattern.getPacket_num_avr())) {
+                if (dstIpNumIsLarge(pattern.getDstIP_num()) && dstPortNumIsSmall(pattern.getDstPort_num())) {
                     recordSrcAttack(key, pattern, "network scanning");
                     if (isScanning(pattern, 1)) {
                         System.out.println("network scanning");
@@ -172,7 +163,8 @@ public class TrafficPatternDetector {
                     }
                 }
             }
-            if (isLarge(pattern.getPacket_num_sum()) && isLarge(pattern.getFlow_size_sum())) {
+
+            if (packetNumSumisLarge(pattern.getPacket_num_sum()) && flowSizeSumIsLarge(pattern.getFlow_size_sum())) {
                 System.out.println("(ICMP, UDP, TCP) flooding");
                 if (isSYNflooding(pattern)) {
                     System.out.println("SYN flooding");
@@ -183,6 +175,55 @@ public class TrafficPatternDetector {
         }
     }
 
+    private boolean packetNumSumisLarge(int packet_num_sum) {
+        return true;
+    }
+
+    private boolean flowSizeSumIsLarge(int flow_size_sum) {
+        return true;
+    }
+
+    private boolean packetNumSumIsLarge(int packet_num_sum) {
+        return true;
+    }
+
+    private boolean dstIpNumIsLarge(int dstIP_num) {
+        return true;
+    }
+
+    private boolean flowSizeAvgIsSmall(float flow_size_avr) {
+        return true;
+    }
+
+    private boolean ACKDivSYNIsSmall(int i) {
+        return true;
+    }
+
+    private boolean dstPortNumIsSmall(int dstPort_num) {
+        return true;
+    }
+
+    private boolean srcIpNumIsSmall(int srcIP_num) {
+        return true;
+    }
+
+    private boolean dstPortNumIsLarge(int dstPort_num) {
+        return true;
+    }
+
+    private boolean packetNumAvgIsSmall(float packet_num_avr) {
+        return true;
+    }
+
+    private boolean flowNumIsLarge(int flow_num) {
+        return true;
+    }
+
+    private boolean flowSizeAvrIsSmall(float flow_size_avr) {
+        return true;
+    }
+
+
     public void run() {
         scheduExec.scheduleWithFixedDelay(new Runnable() {
             public void run() {
@@ -190,6 +231,7 @@ public class TrafficPatternDetector {
                 generator.run();
                 System.err.printf("Start Traffic Pattern Detection! %d %d \n", LocalStorage.source_based.size(), LocalStorage.destination_based.size());
                 for (Map.Entry<String, TrafficPattern> item : LocalStorage.source_based.entrySet()) {
+
                     detect(item.getKey(), item.getValue(), 1);
                 }
 
