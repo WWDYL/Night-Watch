@@ -16,16 +16,9 @@ public class RedisUtils {
 
     RedisUtils() {
         jedis = new Jedis("localhost");
-        if (jedis != null) {
-            System.out.println("Server is running: " + jedis.ping());
-        }
     }
 
     public Jedis getJedis() {
         return jedis;
-    }
-
-    public static void main(String[] args) {
-        RedisUtils utils = new RedisUtils();
     }
 }

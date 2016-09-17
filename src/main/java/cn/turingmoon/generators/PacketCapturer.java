@@ -7,40 +7,28 @@ import org.jnetpcap.PcapIf;
 import org.jnetpcap.packet.PcapPacket;
 import org.jnetpcap.packet.PcapPacketHandler;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class PacketCapturer implements PcapPacketHandler<String> {
+public class PacketCapturer {
 
-    public void nextPacket(PcapPacket packet, String user) {
-        FlowGenerator generator = new FlowGenerator();
-        generator.handlePacket(packet);
+    private String filename = null;
+
+    private class PacketHandler implements PcapPacketHandler<String> {
+        public void nextPacket(PcapPacket packet, String user) {
+            FlowGenerator generator = new FlowGenerator();
+            generator.handlePacket(packet);
+        }
+    }
+
+    public PacketCapturer(String filename) {
+        this.filename = filename;
     }
 
     public void start() {
-        List<PcapIf> pcapIfs = new ArrayList<PcapIf>();
         StringBuilder errBuf = new StringBuilder();
-        Pcap.findAllDevs(pcapIfs, errBuf);
-        if (pcapIfs.isEmpty()) {
-            System.err.printf("Can't read list of devices, error is %s\n", errBuf.toString());
-            // TODO: Modify this line to another safe method to exit.
-            System.exit(1);
-        }
-
-        int i = 0;
-        for (PcapIf pcapIf : pcapIfs) {
-            System.out.printf("%d: %s %s\n", i++, pcapIf.getAddresses().get(0).getAddr(), pcapIf.getDescription());
-        }
-
-
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Please input the number of the NIC: ");
-        int num = scanner.nextInt();
-        PcapIf dev = pcapIfs.get(num);
-
-        LocalStorage.BroadcastAddr = dev.getAddresses().get(0).getBroadaddr().toString();
-        System.out.println(LocalStorage.BroadcastAddr);
 
         PcapBpfProgram program = new PcapBpfProgram();
         String bpf = "ip";
@@ -50,11 +38,38 @@ public class PacketCapturer implements PcapPacketHandler<String> {
         int snaplen = 64 * 1024;
         int flags = Pcap.MODE_PROMISCUOUS;
         int timeout = 10 * 1000;
-        Pcap pcap = Pcap.openLive(dev.getName(), snaplen, flags, timeout, errBuf);
+
+        Pcap pcap;
+        if (filename == null) {
+            List<PcapIf> pcapIfs = new ArrayList<PcapIf>();
+            Pcap.findAllDevs(pcapIfs, errBuf);
+            if (pcapIfs.isEmpty()) {
+                System.err.printf("Can't read list of devices, error is %s\n", errBuf.toString());
+                // TODO: Modify this line to another safe method to exit.
+                System.exit(1);
+            }
+
+            int i = 0;
+            for (PcapIf pcapIf : pcapIfs) {
+                System.out.printf("%d: %s %s\n", i++, pcapIf.getAddresses().get(0).getAddr(), pcapIf.getDescription());
+            }
+
+
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Please input the number of the NIC: ");
+            int num = scanner.nextInt();
+            PcapIf dev = pcapIfs.get(num);
+
+            LocalStorage.BroadcastAddr = dev.getAddresses().get(0).getBroadaddr().toString();
+            System.out.println(LocalStorage.BroadcastAddr);
+            pcap = Pcap.openLive(dev.getName(), snaplen, flags, timeout, errBuf);
+        } else {
+            pcap = Pcap.openOffline(filename, errBuf);
+        }
 
         if (pcap == null) {
-            System.err.printf("Error while opening device for capture: %s\n", errBuf.toString());
-            return;
+            System.err.printf("Error: %s\n", errBuf.toString());
+            System.exit(1);
         }
 
         if (pcap.compile(program, bpf, optimize, netmask) != Pcap.OK) {
@@ -63,7 +78,7 @@ public class PacketCapturer implements PcapPacketHandler<String> {
         }
         pcap.setFilter(program);
 
-        pcap.loop(-1, new PacketCapturer(), null);
+        pcap.loop(-1, new PacketHandler(), null);
         pcap.close();
     }
 }

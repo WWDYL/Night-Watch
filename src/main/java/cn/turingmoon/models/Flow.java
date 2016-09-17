@@ -24,8 +24,7 @@ public class Flow {
                 && getdIP().equals(right.getdIP())
                 && (getsPort() == null || getsPort().equals(right.getsPort()))
                 && (getdPort() == null || getdPort().equals(right.getdPort()))
-                && getType().equals(right.getType());
-
+                && (getType() == null || getType().equals(right.getType()));
     }
 
     public Date getbTime() {

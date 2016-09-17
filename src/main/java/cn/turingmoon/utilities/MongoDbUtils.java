@@ -7,7 +7,9 @@ import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MongoDbUtils {
@@ -27,8 +29,14 @@ public class MongoDbUtils {
         MongoClient mongoClient = new MongoClient( "localhost" );
         MongoDatabase mongoDatabase = mongoClient.getDatabase("mydb");
 
-        traffic = mongoDatabase.getCollection("traffic");
-        flows = mongoDatabase.getCollection("flows");
+        String traffic_db_name = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-").format(new Date()) + "traffic";
+        String flows_db_name = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-").format(new Date()) + "flows";
+
+        mongoDatabase.createCollection(traffic_db_name);
+        mongoDatabase.createCollection(flows_db_name);
+
+        traffic = mongoDatabase.getCollection(traffic_db_name);
+        flows = mongoDatabase.getCollection(flows_db_name);
     }
 
     public void storeOneRecord(Document doc) {
