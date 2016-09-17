@@ -19,6 +19,7 @@ public class RedisUtils {
     }
 
     public Jedis getJedis() {
+        jedis.flushDB();
         return jedis;
     }
 }
