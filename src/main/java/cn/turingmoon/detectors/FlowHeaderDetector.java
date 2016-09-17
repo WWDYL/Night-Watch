@@ -3,6 +3,7 @@ package cn.turingmoon.detectors;
 import cn.turingmoon.LocalStorage;
 import cn.turingmoon.constants.AttackType;
 import cn.turingmoon.constants.FlowType;
+import cn.turingmoon.models.AttackRecord;
 import cn.turingmoon.models.Flow;
 import cn.turingmoon.utilities.MongoDbUtils;
 import cn.turingmoon.utilities.RedisUtils;
@@ -26,7 +27,7 @@ public class FlowHeaderDetector {
     private int cycle = LocalStorage.CYCLE_TIME;
 
     public FlowHeaderDetector() {
-        scheduExec = Executors.newScheduledThreadPool(2);
+        scheduExec = Executors.newScheduledThreadPool(8);
     }
 
     private boolean isSmall(int num) {
@@ -55,7 +56,6 @@ public class FlowHeaderDetector {
         jedis.hset(attack_id, "Victim", flow.getdIP());
         jedis.hset(attack_id, "Protocol", flow.getType());
         jedis.hset(attack_id, "Description", type.name());
-
     }
 
     private void detect(Flow flow) {
@@ -63,6 +63,7 @@ public class FlowHeaderDetector {
             /* 检测是否是land attack */
             if (flow.getsIP().equals(flow.getdIP()) && flow.getsPort().equals(flow.getdPort())) {
                 recordAttackType(flow, AttackType.Land);
+                AttackRecorder.record(new AttackRecord(flow, AttackType.Land));
             }
             /* 检测是否是TCP flooding */
             if (isLarge(flow.getpNum()) && isLarge(flow.getpSize())) {
@@ -72,9 +73,11 @@ public class FlowHeaderDetector {
             if (isReflectingPort(flow.getdPort())) {
                 if (isReflectingPort(flow.getsPort())) {
                     recordAttackType(flow, AttackType.ping_pong);
+                    AttackRecorder.record(new AttackRecord(flow, AttackType.ping_pong));
                 }
                 if (isBroadcastAddr(flow.getdIP())) {
                     recordAttackType(flow, AttackType.Fraggle);
+                    AttackRecorder.record(new AttackRecord(flow, AttackType.Fraggle));
                 }
             }
             if (isLarge(flow.getpNum()) && isLarge(flow.getpSize())) {
@@ -83,9 +86,11 @@ public class FlowHeaderDetector {
         } else if (flow.getType().equals(FlowType.ICMP_Echo_Request)) {
             if (isBroadcastAddr(flow.getdIP())) {
                 recordAttackType(flow, AttackType.Smurf);
+                AttackRecorder.record(new AttackRecord(flow, AttackType.Smurf));
             }
             if (isLarge(flow.getpSize() / flow.getpNum())) {
                 recordAttackType(flow, AttackType.Ping_of_death);
+                AttackRecorder.record(new AttackRecord(flow, AttackType.Ping_of_death));
             }
             if (isLarge(flow.getpSize()) && isLarge(flow.getpNum())) {
                 recordAttackType(flow, AttackType.ICMP_flooding);

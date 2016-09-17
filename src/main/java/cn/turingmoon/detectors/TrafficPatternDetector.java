@@ -1,6 +1,7 @@
 package cn.turingmoon.detectors;
 
 import cn.turingmoon.LocalStorage;
+import cn.turingmoon.models.AttackRecord;
 import cn.turingmoon.models.TrafficPattern;
 import cn.turingmoon.utilities.RedisUtils;
 import redis.clients.jedis.Jedis;
@@ -19,7 +20,7 @@ public class TrafficPatternDetector {
     private int cycle = LocalStorage.CYCLE_TIME;
 
     public TrafficPatternDetector() {
-        scheduExec = Executors.newScheduledThreadPool(2);
+        scheduExec = Executors.newScheduledThreadPool(5);
         jedis = RedisUtils.getInstance().getJedis();
     }
 
@@ -141,29 +142,33 @@ public class TrafficPatternDetector {
         if (type == 2) {
             if (isLarge(pattern.getFlow_num()) && isSmall(pattern.getFlow_size_avr()) && isSmall(pattern.getPacket_num_avr())) {
                 if (isLarge(pattern.getDstPort_num()) && isSmall(pattern.getSrcIP_num())) {
+                    recordDstAttack(key, pattern, "host scanning");
                     if (isScanning(pattern, 2)) {
                         System.out.println("host scanning");
-                        recordDstAttack(key, pattern, "host scanning");
+                        AttackRecorder.record(new AttackRecord(2, key, pattern, "host scanning"));
                     }
                 }
                 if (isSmall(pattern.getDstPort_num()) && isSmall(pattern.getACK_num() / pattern.getSYN_num())) {
                     System.out.println("TCP SYN flood");
                     recordDstAttack(key, pattern, "TCP SYN flood");
+                    AttackRecorder.record(new AttackRecord(2, key, pattern, "TCP SYN flood"));
                 }
             }
             if (isLarge(pattern.getPacket_num_sum()) && isLarge(pattern.getFlow_size_sum())) {
                 System.out.println("(ICMP, UDP, TCP) flooding");
                 if (isSYNflooding(pattern)) {
                     System.out.println("SYN flooding");
+                    AttackRecorder.record(new AttackRecord(2, key, pattern, "SYN flooding"));
                 }
                 recordDstAttack(key, pattern, "(ICMP UDP TCP) flooding");
             }
         } else {
             if (isLarge(pattern.getFlow_num()) && isSmall(pattern.getFlow_size_avr()) && isSmall(pattern.getPacket_num_avr())) {
                 if (isLarge(pattern.getDstIP_num()) && isSmall(pattern.getDstPort_num())) {
+                    recordSrcAttack(key, pattern, "network scanning");
                     if (isScanning(pattern, 1)) {
                         System.out.println("network scanning");
-                        recordSrcAttack(key, pattern, "network scanning");
+                        AttackRecorder.record(new AttackRecord(1, key, pattern, "network scanning"));
                     }
                 }
             }
@@ -171,6 +176,7 @@ public class TrafficPatternDetector {
                 System.out.println("(ICMP, UDP, TCP) flooding");
                 if (isSYNflooding(pattern)) {
                     System.out.println("SYN flooding");
+                    AttackRecorder.record(new AttackRecord(1, key, pattern, "SYN flooding"));
                 }
                 recordSrcAttack(key, pattern, "(ICMP UDP TCP) flooding");
             }

@@ -30,8 +30,12 @@ public class FlowStore {
                     Document temp = Flow.toDocument(item);
                     docs.add(temp);
                 }
+                System.err.println(docs.size());
                 MongoDbUtils dbUtils = MongoDbUtils.getInstance();
-                if (docs.isEmpty()) return;
+                if (docs.isEmpty()){
+                    System.out.println("EMPTY");
+                    return;
+                }
                 dbUtils.storeSomeRecord(docs);
                 LocalStorage.tempFlows.clear();
             }

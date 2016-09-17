@@ -16,10 +16,10 @@ public class RedisUtils {
 
     RedisUtils() {
         jedis = new Jedis("localhost");
+        jedis.flushDB();
     }
 
     public Jedis getJedis() {
-        jedis.flushDB();
         return jedis;
     }
 }

@@ -26,11 +26,12 @@ public class MongoDbUtils {
     }
 
     private MongoDbUtils() {
-        MongoClient mongoClient = new MongoClient( "localhost" );
+        MongoClient mongoClient = new MongoClient("localhost");
         MongoDatabase mongoDatabase = mongoClient.getDatabase("mydb");
 
-        String traffic_db_name = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-").format(new Date()) + "traffic";
-        String flows_db_name = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-").format(new Date()) + "flows";
+        String now_time = Long.toString(new Date().getTime());
+        String traffic_db_name = "traffic" + now_time;
+        String flows_db_name = "flows" + now_time;
 
         mongoDatabase.createCollection(traffic_db_name);
         mongoDatabase.createCollection(flows_db_name);
@@ -45,6 +46,7 @@ public class MongoDbUtils {
 
     public void storeSomeRecord(List<Document> docs) {
         flows.insertMany(docs);
+        System.out.println(flows.count());
     }
 
     public List<Document> getFlowRecords(Bson query) {

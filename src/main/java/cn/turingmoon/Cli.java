@@ -32,7 +32,7 @@ public class Cli {
     }
 
     static private void debugMode() {
-        LocalStorage.CYCLE_TIME = 10;
+        LocalStorage.CYCLE_TIME = 30;
     }
 
     public static void main(String[] args) {
