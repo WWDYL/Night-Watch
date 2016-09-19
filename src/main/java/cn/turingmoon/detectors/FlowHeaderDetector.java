@@ -8,6 +8,8 @@ import cn.turingmoon.models.Flow;
 import cn.turingmoon.utilities.MongoDbUtils;
 import cn.turingmoon.utilities.RedisUtils;
 import org.bson.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 
 import java.util.Date;
@@ -21,6 +23,7 @@ import static com.mongodb.client.model.Filters.gt;
 
 public class FlowHeaderDetector {
 
+    private Logger logger = LoggerFactory.getLogger(FlowHeaderDetector.class);
     private ScheduledExecutorService scheduExec;
     private Date begin_time = new Date(0);
     private long flows_sum = 0;
@@ -30,19 +33,22 @@ public class FlowHeaderDetector {
     private int cycle = LocalStorage.CYCLE_TIME;
 
     public FlowHeaderDetector() {
-        scheduExec = Executors.newScheduledThreadPool(8);
+        scheduExec = Executors.newScheduledThreadPool(1);
     }
 
     private boolean pcIsLarge(int num) {
+        logger.info("Packet Count: {} {}", num, num / (float) flows_psum);
         return num > 0.5 * flows_psum;
     }
 
     private boolean fsIsLarge(int num) {
+        logger.info("Flow Size: {} {}", num, num / (float) flows_psize);
         return num > 0.5 * flows_psize;
     }
 
     private boolean percentIsLarge(float num) {
         /* TODO: get the normal percentage. */
+        logger.info("Packet Size / Packet Num: {}", num);
         return num > 1;
     }
 
@@ -77,6 +83,7 @@ public class FlowHeaderDetector {
             if (pcIsLarge(flow.getpNum()) && fsIsLarge(flow.getpSize())) {
                 recordAttackType(flow, AttackType.TCP_flooding);
             }
+
         } else if (flow.getType().equals(FlowType.UDP)) {
             if (isReflectingPort(flow.getdPort())) {
                 if (isReflectingPort(flow.getsPort())) {
@@ -107,31 +114,34 @@ public class FlowHeaderDetector {
     }
 
     public void run() {
-        scheduExec.scheduleWithFixedDelay(new Runnable() {
-            public void run() {
-                MongoDbUtils utils = MongoDbUtils.getInstance();
-                List<Document> flows = utils.getFlowRecords(gt("BeginTime", begin_time));
-                int num = 0;
-                /**
-                 *  This method is bad because it will cost some extra resources, but I haven't
-                 *  find a better way to implement the statistics. Remove this when you find a better
-                 *  way.
-                 *  TODO: find a better method to implement statistics function.
-                 */
-                for (Document document : flows) {
-                    flows_sum++;
-                    flows_psum += document.getInteger("PacketNum");
-                    flows_psize += document.getInteger("PacketSize");
-                }
-                for (Document document : flows) {
-                    num++;
-                    Flow tempflow = Flow.parseDocument(document);
-                    detect(tempflow);
-                    begin_time = tempflow.getbTime();
-                }
-                System.err.println("NUM: " + num);
+        scheduExec.scheduleWithFixedDelay(() -> {
+            logger.info("Start Flow Header Detection! ");
+            MongoDbUtils utils = MongoDbUtils.getInstance();
+            List<Document> flows = utils.getFlowRecords(new Document());
+            /*
+             * TODO: add filter to reduce repeat work.
+             * ORIGIN: gt("BeginTime", begin_time)
+             */
+            int num = 0;
+            /*
+             *  This method is silly because it will cost some extra resources, but I haven't
+             *  find a better way to implement the statistics. Remove this when you find a better
+             *  way.
+             *  TODO: find a better method to implement statistics function.
+             */
+            for (Document document : flows) {
+                flows_sum++;
+                flows_psum += document.getInteger("PacketNum");
+                flows_psize += document.getInteger("PacketSize");
             }
-        }, cycle, cycle, TimeUnit.SECONDS);
+            for (Document document : flows) {
+                num++;
+                Flow tempFlow = Flow.parseDocument(document);
+                detect(tempFlow);
+                begin_time = tempFlow.getbTime();
+            }
+            logger.info("Flow Header Detect {} records", num);
+        }, 2 * cycle, cycle, TimeUnit.SECONDS);
     }
 
 }

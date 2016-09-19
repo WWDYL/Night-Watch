@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 public class MongoDbUtils {
     private static MongoDbUtils mongoDbUtils;
@@ -25,11 +26,24 @@ public class MongoDbUtils {
         return mongoDbUtils;
     }
 
+    /** 产生一个随机的字符串*/
+    private static String RandomString(int length) {
+        String str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        Random random = new Random();
+        StringBuffer buf = new StringBuffer();
+        for (int i = 0; i < length; i++) {
+            int num = random.nextInt(62);
+            buf.append(str.charAt(num));
+        }
+        return buf.toString();
+    }
+
     private MongoDbUtils() {
         MongoClient mongoClient = new MongoClient("localhost");
         MongoDatabase mongoDatabase = mongoClient.getDatabase("mydb");
 
-        String now_time = Long.toString(new Date().getTime());
+//        String now_time = Long.toString(new Date().getTime());
+        String now_time = RandomString(5);
         String traffic_db_name = "traffic" + now_time;
         String flows_db_name = "flows" + now_time;
 
@@ -46,7 +60,6 @@ public class MongoDbUtils {
 
     public void storeSomeRecord(List<Document> docs) {
         flows.insertMany(docs);
-        System.out.println(flows.count());
     }
 
     public List<Document> getFlowRecords(Bson query) {

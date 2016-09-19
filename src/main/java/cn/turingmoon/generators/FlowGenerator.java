@@ -102,7 +102,11 @@ public class FlowGenerator {
             } else if (type == 0) {
                 // Ping echo response
                 temp.setType(FlowType.ICMP_Echo_Response);
+            } else {
+                temp.setType(FlowType.ICMP);
             }
+        } else {
+            temp.setType(FlowType.ICMP);
         }
     }
 
@@ -128,7 +132,6 @@ public class FlowGenerator {
     private void udpHandler(Udp udp) {
         String srcPort = String.valueOf(udp.source());
         String dstPort = String.valueOf(udp.destination());
-        int length = udp.length();
 //        System.out.printf("UDP: len: %d %s -> %s\n", length, srcPort, dstPort);
         temp.setsPort(srcPort);
         temp.setdPort(dstPort);

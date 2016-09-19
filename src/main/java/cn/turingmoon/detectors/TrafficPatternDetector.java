@@ -4,6 +4,8 @@ import cn.turingmoon.LocalStorage;
 import cn.turingmoon.models.AttackRecord;
 import cn.turingmoon.models.TrafficPattern;
 import cn.turingmoon.utilities.RedisUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 
 import java.text.SimpleDateFormat;
@@ -14,13 +16,14 @@ import java.util.concurrent.TimeUnit;
 
 public class TrafficPatternDetector {
 
+    private Logger logger = LoggerFactory.getLogger(TrafficPatternDetector.class);
     private ScheduledExecutorService scheduExec = null;
     private Jedis jedis = null;
 
     private int cycle = LocalStorage.CYCLE_TIME;
 
     public TrafficPatternDetector() {
-        scheduExec = Executors.newScheduledThreadPool(5);
+        scheduExec = Executors.newScheduledThreadPool(1);
         jedis = RedisUtils.getInstance().getJedis();
     }
 
@@ -50,7 +53,7 @@ public class TrafficPatternDetector {
         private static int t_n_packet = 1;
         private static int t_port = 1;
     }
-    
+
     private boolean isScanning(TrafficPattern pattern, int type) {
         int v_n_flow = pattern.getFlow_num() / ScanningValue.t_n_flow;
         float v_l_flow = ScanningValue.t_l_flow / pattern.getFlow_size_avr();
@@ -59,11 +62,11 @@ public class TrafficPatternDetector {
         int v_port = pattern.getDstPort_num() / ScanningValue.t_port;
 
         double f_scan = v_n_flow * ScanningValue.w_n_flow +
-                        v_l_flow * ScanningValue.w_l_flow +
-                        v_n_packet * ScanningValue.w_n_packet +
-                        v_ip * ScanningValue.w_ip +
-                        v_port * ScanningValue.w_port;
-        System.out.println(f_scan);
+                v_l_flow * ScanningValue.w_l_flow +
+                v_n_packet * ScanningValue.w_n_packet +
+                v_ip * ScanningValue.w_ip +
+                v_port * ScanningValue.w_port;
+        logger.info("Scan Function: {}", f_scan);
         return scanFuncIsLarge(f_scan);
     }
 
@@ -83,7 +86,7 @@ public class TrafficPatternDetector {
                 v_n_packet * SYNFloodingValue.w_n_packet +
                 v_port * SYNFloodingValue.w_port +
                 v_syn_ack * SYNFloodingValue.w_syn_ack;
-        System.out.println(f_syn);
+        logger.info("SYN Function: {}", f_syn);
         return SYNFuncisLarge(f_syn);
     }
 
@@ -105,9 +108,9 @@ public class TrafficPatternDetector {
         jedis.hset(attack_id, "BeginTime", sdf.format(tp.getBeginTime()));
         jedis.hset(attack_id, "Duration", Long.toString(tp.getDuration()));
 
-        jedis.hset(attack_id, "Flows/s", Float.toString(tp.getFlow_num() / (float)tp.getDuration()));
-        jedis.hset(attack_id, "Packets/s", Float.toString(tp.getPacket_num_sum() / (float)tp.getDuration()));
-        jedis.hset(attack_id, "Bytes/s", Float.toString(tp.getFlow_size_sum() / (float)tp.getDuration()));
+        jedis.hset(attack_id, "Flows/s", Float.toString(tp.getFlow_num() / (float) tp.getDuration()));
+        jedis.hset(attack_id, "Packets/s", Float.toString(tp.getPacket_num_sum() / (float) tp.getDuration()));
+        jedis.hset(attack_id, "Bytes/s", Float.toString(tp.getFlow_size_sum() / (float) tp.getDuration()));
     }
 
     private void recordDstAttack(String key, TrafficPattern tp, String type) {
@@ -123,9 +126,9 @@ public class TrafficPatternDetector {
         jedis.hset(attack_id, "BeginTime", sdf.format(tp.getBeginTime()));
         jedis.hset(attack_id, "Duration", Long.toString(tp.getDuration()));
 
-        jedis.hset(attack_id, "Flows/s", Float.toString(tp.getFlow_num() / (float)tp.getDuration()));
-        jedis.hset(attack_id, "Packets/s", Float.toString(tp.getPacket_num_sum() / (float)tp.getDuration()));
-        jedis.hset(attack_id, "Bytes/s", Float.toString(tp.getFlow_size_sum() / (float)tp.getDuration()));
+        jedis.hset(attack_id, "Flows/s", Float.toString(tp.getFlow_num() / (float) tp.getDuration()));
+        jedis.hset(attack_id, "Packets/s", Float.toString(tp.getPacket_num_sum() / (float) tp.getDuration()));
+        jedis.hset(attack_id, "Bytes/s", Float.toString(tp.getFlow_size_sum() / (float) tp.getDuration()));
     }
 
     public void detect(String key, TrafficPattern pattern, int type) {
@@ -164,7 +167,7 @@ public class TrafficPatternDetector {
                 }
             }
 
-            if (packetNumSumisLarge(pattern.getPacket_num_sum()) && flowSizeSumIsLarge(pattern.getFlow_size_sum())) {
+            if (packetNumSumIsLarge(pattern.getPacket_num_sum()) && flowSizeSumIsLarge(pattern.getFlow_size_sum())) {
                 System.out.println("(ICMP, UDP, TCP) flooding");
                 if (isSYNflooding(pattern)) {
                     System.out.println("SYN flooding");
@@ -175,71 +178,74 @@ public class TrafficPatternDetector {
         }
     }
 
-    private boolean packetNumSumisLarge(int packet_num_sum) {
-        return true;
-    }
-
     private boolean flowSizeSumIsLarge(int flow_size_sum) {
+        logger.info("Flow Size Sum: {}", flow_size_sum);
         return true;
     }
 
     private boolean packetNumSumIsLarge(int packet_num_sum) {
+        logger.info("Packet Num Sum: {}", packet_num_sum);
         return true;
     }
 
     private boolean dstIpNumIsLarge(int dstIP_num) {
+        logger.info("Dst Ip Num: {}", dstIP_num);
         return true;
     }
 
     private boolean flowSizeAvgIsSmall(float flow_size_avr) {
+        logger.info("Flow Size Avg: {}", flow_size_avr);
         return true;
     }
 
     private boolean ACKDivSYNIsSmall(int i) {
+        logger.info("ACK / SYN: {}", i);
         return true;
     }
 
     private boolean dstPortNumIsSmall(int dstPort_num) {
+        logger.info("Dst Port Num(S): {}", dstPort_num);
         return true;
     }
 
     private boolean srcIpNumIsSmall(int srcIP_num) {
+        logger.info("Src Ip Num: {}", srcIP_num);
         return true;
     }
 
     private boolean dstPortNumIsLarge(int dstPort_num) {
+        logger.info("Dst Port Num(L): {}", dstPort_num);
         return true;
     }
 
     private boolean packetNumAvgIsSmall(float packet_num_avr) {
+        logger.info("Packet Num Avg: {}", packet_num_avr);
         return true;
     }
 
     private boolean flowNumIsLarge(int flow_num) {
+        logger.info("Flow Num: {}", flow_num);
         return true;
     }
 
     private boolean flowSizeAvrIsSmall(float flow_size_avr) {
+        logger.info("Flow Size Avg: {}", flow_size_avr);
         return true;
     }
 
 
     public void run() {
-        scheduExec.scheduleWithFixedDelay(new Runnable() {
-            public void run() {
-                TrafficPatternDataGenerator generator = new TrafficPatternDataGenerator();
-                generator.run();
-                System.err.printf("Start Traffic Pattern Detection! %d %d \n", LocalStorage.source_based.size(), LocalStorage.destination_based.size());
-                for (Map.Entry<String, TrafficPattern> item : LocalStorage.source_based.entrySet()) {
-
-                    detect(item.getKey(), item.getValue(), 1);
-                }
-
-                for (Map.Entry<String, TrafficPattern> item : LocalStorage.destination_based.entrySet()) {
-                    detect(item.getKey(), item.getValue(), 2);
-                }
-
+        scheduExec.scheduleWithFixedDelay(() -> {
+            TrafficPatternDataGenerator generator = new TrafficPatternDataGenerator();
+            generator.run();
+            logger.info("Start Traffic Pattern Detection! {} {}", LocalStorage.source_based.size(), LocalStorage.destination_based.size());
+            for (Map.Entry<String, TrafficPattern> item : LocalStorage.source_based.entrySet()) {
+                detect(item.getKey(), item.getValue(), 1);
             }
-        }, cycle, cycle, TimeUnit.SECONDS);
+
+            for (Map.Entry<String, TrafficPattern> item : LocalStorage.destination_based.entrySet()) {
+                detect(item.getKey(), item.getValue(), 2);
+            }
+        }, 2 * cycle, cycle, TimeUnit.SECONDS);
     }
 }

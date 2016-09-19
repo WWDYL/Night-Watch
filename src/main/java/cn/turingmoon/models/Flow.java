@@ -22,9 +22,11 @@ public class Flow {
         Flow right = (Flow) o;
         return getsIP().equals(right.getsIP())
                 && getdIP().equals(right.getdIP())
-                && (getsPort() == null || getsPort().equals(right.getsPort()))
-                && (getdPort() == null || getdPort().equals(right.getdPort()))
-                && (getType() == null || getType().equals(right.getType()));
+                && ((getsPort() == null && right.getsPort() == null)
+                        || (getsPort() != null && getsPort().equals(right.getsPort())))
+                && ((getdPort() == null && right.getdPort() == null)
+                        || (getdPort() != null && getdPort().equals(right.getdPort())))
+                && getType().equals(right.getType());
     }
 
     public Date getbTime() {
