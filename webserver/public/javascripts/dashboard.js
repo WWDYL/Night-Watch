@@ -233,8 +233,20 @@ $('#container').highcharts({
 //         }
 //     }
 // });
-var attack_table = $('#attack').DataTable({
+
+var attacks_table = $('#attacks').DataTable({
     "ajax": "/api/attacks",
+    "columns": [
+        {"data": 'BeginTime'},
+        {"data": "Duration"},
+        {"data": "Attacker"},
+        {"data": "Victim"},
+        {"data": "Protocol"},
+        {"data": "Description"}
+    ]
+});
+var attack_table = $('#attack').DataTable({
+    "ajax": "/api/fh_attacks",
     "columns": [
         {"data": 'Attacker'},
         {"data": "Victim"},
@@ -281,9 +293,21 @@ var src_attack = $('#src_attack').DataTable({
     ]
 });
 
-var attack2_table = $('#tp_attack').DataTable();
+
+var dst_attack = $('#dst_attack').DataTable({
+    "ajax": "/api/dst_attacks",
+    "columns": [
+        {"data": 'BeginTime'},
+        {"data": 'Victim'},
+        {"data": 'Protocol'},
+        {"data": 'Flows/s'},
+        {"data": 'Packets/s'},
+        {"data": 'Bytes/s'}
+    ]
+});
 
 var socket = io("http://localhost:3000");
 socket.on('attack', function(data) {
-    alert(data);
+    console.log(data);
+    $('.bw').prepend($('<div>').attr("class","alert alert-success").attr("role","alert").text(data.hello));
 });

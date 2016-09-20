@@ -24,7 +24,7 @@ var server = http.createServer(app);
 var io = require('socket.io')(server);
 
 io.on('connection', function(socket) {
-  socket.emit('attack', {hello: 'world'});
+  socket.emit('attack', {hello: '有新的网络攻击！'});
 });
 
 /**

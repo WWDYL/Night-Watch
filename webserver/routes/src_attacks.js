@@ -7,7 +7,7 @@ client.on('error', function(err) {
     console.log('redis is error!');
 });
 
-router.get('/', function(req, res, next){
+router.get('/', function(req, res, next) {
     var jsondata = {"data" : []};
     client.get("tp_attack_src:", function (err, reply) {
         // reply = 10;

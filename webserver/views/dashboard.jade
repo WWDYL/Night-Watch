@@ -45,13 +45,25 @@ html(lang='zh-CN')
                         .ob.ape
                             .tn.aol
                                 input.form-control#datetimepicker(type="text", value="2016-09-10 12:00", data-date-format="yyyy-mm-dd hh:ii")
+                            button.btn.btn-info 选择
                     hr
-                    h2.sub-header 流量监测图
+                    h2.sub-header 网络监测图
                     .row.placeholders
                         .col-xs-6.col-sm-12.placeholder
                             //img.img-responsive(data-src='holder.js/200x200/auto/sky', alt='Generic placeholder thumbnail')
                             h4#container(min-width='310px',height='400px')
                             span.text-muted
+                    h2.sub-header 攻击情况
+                    .table-responsive
+                        table#attacks.table.table-bordered(cellpadding='0', cellspacing='0', border='0')
+                            thead
+                                tr
+                                    th 开始时间
+                                    th 持续时间
+                                    th 攻击者
+                                    th 被攻击者
+                                    th 协议
+                                    th 攻击描述
                     h2.sub-header#flows 流量监测表
                     .table-responsive
                         table#example.table.table-bordered(cellpadding='0', cellspacing='0', border='0')
@@ -76,8 +88,6 @@ html(lang='zh-CN')
                                     th 协议
                                     th 攻击描述
                     h2.sub-header#trafficpattern 流量模型识别的可能攻击情况
-                    .table-responsive
-                        table#tp_attack.table.table-bordered(cellpadding='0', cellspacing='0', border='0')
                     h2.sub-header#sourcebased Source Based
                     .table-responsive
                         table#src_attack.table.table-bordered(cellpadding='0', cellspacing='0', border='0')
@@ -89,39 +99,25 @@ html(lang='zh-CN')
                                     th Flows/s
                                     th Packets/s
                                     th Bytes/s
+                    h2.sub-header#dstbased Destination Based
+                    .table-responsive
+                        table#dst_attack.table.table-bordered(cellpadding='0', cellspacing='0', border='0')
+                            thead
+                                tr
+                                    th 开始时间
+                                    th 被攻击者
+                                    th 协议
+                                    th Flows/s
+                                    th Packets/s
+                                    th Bytes/s
                 .menu
                     header.menu__header
                         h1.menu__header-title 及时消息
-                    .menu__body
-                        ul.mitems
-                            li.nav__item
-                                a.nav__item-link.is-active(href='#')
-                                    i.fa.fa-envelope.nav__item-icon
-                                    span.nav__item-text News
-                                    span.badge.badge--warning 32
-                            li.nav__item
-                                a.nav__item-link(href='#')
-                                    i.fa.fa-flag.nav__item-icon
-                                    span.nav__item-text Priority
-                                    span.badge 8
-                            li.nav__item
-                                a.nav__item-link(href='#')
-                                    i.fa.fa-space-shuttle.nav__item-icon
-                                    span.nav__item-text Assigned
-                                    span.badge 0/17
-                            li.nav__item
-                                a.nav__item-link(href='#')
-                                    i.fa.fa-archive.nav__item-icon
-                                    span.nav__item-text Archived
-                                    span.badge 3
-                            li.nav__item
-                                a.nav__item-link(href='#')
-                                    i.fa.fa-trash.nav__item-icon
-                                    span.nav__item-text Deleted
-                                    span.badge 9
-                            li.nav__item
-                                a.nav__item-link(href='#')
-                                    span.nav__item-text Show all
+                        ul.list-group
+                            li.list-group-item.list-group-item-success TCP SYN Flood
+                            li.list-group-item.list-group-item-info Scanning
+                            li.list-group-item.list-group-item-warning ICMP-Echo Flood
+                            li.list-group-item.list-group-item-danger Smurf
         //
           Bootstrap core JavaScript
           ==================================================

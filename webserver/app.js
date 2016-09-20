@@ -10,8 +10,10 @@ var dashboard = require('./routes/dashboard');
 var users = require('./routes/users');
 var tables = require('./routes/tables');
 var flows = require('./routes/data');
-var attackData = require('./routes/attacks');
+var attacks = require('./routes/attacks');
+var fhAttack = require('./routes/fh_attacks');
 var srcAttack = require('./routes/src_attacks');
+var dstAttack = require('./routes/dst_attacks');
 
 var app = express();
 
@@ -31,8 +33,10 @@ app.use('/users', users);
 app.use('/tables', tables);
 app.use('/dashboard', dashboard);
 app.use("/api/flows", flows);
-app.use("/api/attacks", attackData);
+app.use("/api/attacks", attacks);
+app.use("/api/fh_attacks", fhAttack);
 app.use("/api/src_attacks", srcAttack);
+app.use("/api/dst_attacks", dstAttack);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
