@@ -7,9 +7,9 @@ import cn.turingmoon.models.AttackRecord;
 import cn.turingmoon.models.Flow;
 import cn.turingmoon.utilities.MongoDbUtils;
 import cn.turingmoon.utilities.RedisUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bson.Document;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 
 import java.util.Date;
@@ -23,7 +23,7 @@ import static com.mongodb.client.model.Filters.gt;
 
 public class FlowHeaderDetector {
 
-    private Logger logger = LoggerFactory.getLogger(FlowHeaderDetector.class);
+    private static final Logger logger = LogManager.getLogger("FlowHeaderDetector");
     private ScheduledExecutorService scheduExec;
     private Date begin_time = new Date(0);
     private long flows_sum = 0;

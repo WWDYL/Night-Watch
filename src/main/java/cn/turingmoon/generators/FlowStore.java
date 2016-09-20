@@ -3,9 +3,9 @@ package cn.turingmoon.generators;
 import cn.turingmoon.LocalStorage;
 import cn.turingmoon.models.Flow;
 import cn.turingmoon.utilities.MongoDbUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bson.Document;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 public class FlowStore {
 
-    private Logger logger = LoggerFactory.getLogger(FlowStore.class);
+    private Logger logger = LogManager.getLogger(FlowStore.class);
 
     private ScheduledExecutorService scheduExec;
 

@@ -4,8 +4,8 @@ import cn.turingmoon.LocalStorage;
 import cn.turingmoon.models.AttackRecord;
 import cn.turingmoon.models.TrafficPattern;
 import cn.turingmoon.utilities.RedisUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import redis.clients.jedis.Jedis;
 
 import java.text.SimpleDateFormat;
@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 public class TrafficPatternDetector {
 
-    private Logger logger = LoggerFactory.getLogger(TrafficPatternDetector.class);
+    private Logger logger = LogManager.getLogger(TrafficPatternDetector.class);
     private ScheduledExecutorService scheduExec = null;
     private Jedis jedis = null;
 
