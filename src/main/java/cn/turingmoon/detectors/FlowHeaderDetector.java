@@ -73,7 +73,7 @@ public class FlowHeaderDetector {
     }
 
     private void detect(Flow flow) {
-        if (flow.getType().equals(FlowType.TCP)) {
+        if (FlowType.isTCP(flow.getType())) {
             /* 检测是否是land attack */
             if (flow.getsIP().equals(flow.getdIP()) && flow.getsPort().equals(flow.getdPort())) {
                 recordAttackType(flow, AttackType.Land);
@@ -98,8 +98,8 @@ public class FlowHeaderDetector {
             if (pcIsLarge(flow.getpNum()) && fsIsLarge(flow.getpSize())) {
                 recordAttackType(flow, AttackType.UDP_flooding);
             }
-        } else if (flow.getType().equals(FlowType.ICMP_Echo_Request)) {
-            if (isBroadcastAddr(flow.getdIP())) {
+        } else if (FlowType.isICMP(flow.getType())) {
+            if (flow.getType().equals(FlowType.ICMP_Echo_Request) && isBroadcastAddr(flow.getdIP())) {
                 recordAttackType(flow, AttackType.Smurf);
                 AttackRecorder.record(new AttackRecord(flow, AttackType.Smurf));
             }

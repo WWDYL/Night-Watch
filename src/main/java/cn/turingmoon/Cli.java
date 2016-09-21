@@ -4,6 +4,7 @@ import cn.turingmoon.detectors.FlowHeaderDetector;
 import cn.turingmoon.detectors.TrafficPatternDetector;
 import cn.turingmoon.generators.FlowStore;
 import cn.turingmoon.generators.PacketCapturer;
+import cn.turingmoon.utilities.MongoDbUtils;
 import org.apache.commons.cli.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -102,10 +103,11 @@ public class Cli {
             }
 
             if (cl.hasOption("s")) {
+                MongoDbUtils.getInstance();
                 // 运行nodejs服务器作为展示
                 Runtime run = Runtime.getRuntime();
                 try {
-                    Process p = run.exec("node.exe webserver\\bin\\www");
+                    Process p = run.exec("node.exe webserver\\bin\\www " + LocalStorage.FLOWS_DB);
                     BufferedInputStream in = new BufferedInputStream(p.getInputStream());
                     BufferedReader inBr = new BufferedReader(new InputStreamReader(in));
                     String lineStr;

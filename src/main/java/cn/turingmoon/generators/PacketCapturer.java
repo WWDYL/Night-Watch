@@ -60,7 +60,7 @@ public class PacketCapturer {
             int num = scanner.nextInt();
             PcapIf dev = pcapIfs.get(num);
 
-            LocalStorage.BroadcastAddr = dev.getAddresses().get(0).getBroadaddr().toString();
+//            LocalStorage.BroadcastAddr = dev.getAddresses().get(0).getBroadaddr().toString();
             System.out.println(LocalStorage.BroadcastAddr);
             pcap = Pcap.openLive(dev.getName(), snaplen, flags, timeout, errBuf);
         } else {

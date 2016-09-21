@@ -79,7 +79,12 @@ public class TrafficPatternDetector {
         float v_l_flow = SYNFloodingValue.t_l_flow / pattern.getFlow_size_avr();
         float v_n_packet = SYNFloodingValue.t_n_packet / pattern.getPacket_num_avr();
         int v_port = pattern.getDstPort_num() / SYNFloodingValue.t_port;
-        float v_syn_ack = pattern.getSYN_num() / pattern.getACK_num();
+        float v_syn_ack;
+        if (pattern.getACK_num() != 0) {
+            v_syn_ack = pattern.getSYN_num() / pattern.getACK_num();
+        } else {
+            v_syn_ack = 99999999;
+        }
 
         double f_syn = v_n_flow * SYNFloodingValue.w_n_flow +
                 v_l_flow * SYNFloodingValue.w_l_flow +
@@ -141,7 +146,7 @@ public class TrafficPatternDetector {
                         AttackRecorder.record(new AttackRecord(2, key, pattern, "host scanning"));
                     }
                 }
-                if (dstPortNumIsSmall(pattern.getDstPort_num()) && ACKDivSYNIsSmall(pattern.getACK_num() / pattern.getSYN_num())) {
+                if (dstPortNumIsSmall(pattern.getDstPort_num()) && ACKDivSYNIsSmall(pattern.getACK_num(), pattern.getSYN_num())) {
                     System.out.println("TCP SYN flood");
                     recordDstAttack(key, pattern, "TCP SYN flood");
                     AttackRecorder.record(new AttackRecord(2, key, pattern, "TCP SYN flood"));
@@ -198,8 +203,12 @@ public class TrafficPatternDetector {
         return true;
     }
 
-    private boolean ACKDivSYNIsSmall(int i) {
-        logger.info("ACK / SYN: {}", i);
+    private boolean ACKDivSYNIsSmall(int ack, int syn) {
+        if (syn == 0) {
+            logger.info("ACK / SYN: NO SYN");
+            return false;
+        }
+        logger.info("ACK / SYN: {}", (float)ack / syn);
         return true;
     }
 

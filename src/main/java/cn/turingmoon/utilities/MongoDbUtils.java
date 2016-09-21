@@ -1,9 +1,12 @@
 package cn.turingmoon.utilities;
 
+import cn.turingmoon.LocalStorage;
 import com.mongodb.MongoClient;
 import com.mongodb.client.DistinctIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -15,6 +18,8 @@ import java.util.Random;
 
 public class MongoDbUtils {
     private static MongoDbUtils mongoDbUtils;
+
+    private static Logger logger = LogManager.getLogger(MongoDbUtils.class.getName());
 
     private MongoCollection<Document> traffic;
     private MongoCollection<Document> flows;
@@ -46,6 +51,12 @@ public class MongoDbUtils {
         String now_time = RandomString(5);
         String traffic_db_name = "traffic" + now_time;
         String flows_db_name = "flows" + now_time;
+
+        logger.info("Traffic Collection Name: {}", traffic_db_name);
+        logger.info("Flows Collection Name: {}", flows_db_name);
+
+        LocalStorage.TRAFFIC_DB = traffic_db_name;
+        LocalStorage.FLOWS_DB = flows_db_name;
 
         mongoDatabase.createCollection(traffic_db_name);
         mongoDatabase.createCollection(flows_db_name);

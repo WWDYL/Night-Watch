@@ -14,7 +14,10 @@ public class LocalStorage {
     public static String OFFLINE_FILE = null;
     public static String RUNNING_MODE = null;
 
-    public static String BroadcastAddr = null;
+    public static String TRAFFIC_DB = null;
+    public static String FLOWS_DB = null;
+
+    public static String BroadcastAddr = "255.255.255.255";
 
     public static List<Flow> tempFlows = new ArrayList<Flow>();
     public static Map<String, TrafficPattern> source_based = new HashMap<String, TrafficPattern>();

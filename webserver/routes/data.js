@@ -10,9 +10,12 @@ router.get('/', function(req, res) {
     var MongoClient = mongo.MongoClient;
     var assert = require('assert');
     var url = "mongodb://localhost:27017/mydb";
+
+    console.log(process.argv[2]);
+
     co(function*(){
         var db = yield MongoClient.connect(url);
-        var collection = db.collection('flows');
+        var collection = db.collection('flows' + process.argv[2]);
         var documents = yield collection.find().toArray();
         var jsondata = { "data": [] };
 
