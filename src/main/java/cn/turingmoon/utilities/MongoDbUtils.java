@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -78,10 +79,20 @@ public class MongoDbUtils {
         return doc;
     }
 
-    public DistinctIterable<String> getDistinctValues(String col) {
+    public DistinctIterable<String> getDistinctValues(String col, Bson filter) {
         // TODO: 按照时间排序
-        DistinctIterable<String> res = flows.distinct(col, String.class);
+        DistinctIterable<String> res = flows.distinct(col, filter, String.class);
         return res;
+    }
+
+    public void storeHasDetect(ObjectId id, int type) {
+        String key;
+        if (type == 1) {
+            key = "FHDetect";
+        } else {
+            key = "TPDetect";
+        }
+        flows.updateOne(new Document("_id", id), new Document(key, true));
     }
 
     long getCount() {

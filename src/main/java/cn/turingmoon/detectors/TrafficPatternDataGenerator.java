@@ -2,10 +2,12 @@ package cn.turingmoon.detectors;
 
 import cn.turingmoon.LocalStorage;
 import cn.turingmoon.constants.FlowType;
+import cn.turingmoon.models.Flow;
 import cn.turingmoon.models.TrafficPattern;
 import cn.turingmoon.utilities.MongoDbUtils;
 import com.mongodb.client.DistinctIterable;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import java.util.*;
 
@@ -128,26 +130,34 @@ public class TrafficPatternDataGenerator {
         return pattern;
     }
 
-    private void storeIntoDb(String ip, TrafficPattern pattern) {
+    private void HasDetect(ObjectId id) {
 
         // LocalStorage.source_based.put(ip, pattern);
     }
 
     public void run() {
 
-        DistinctIterable<String> srcIPs = utils.getDistinctValues("SrcIP");
-        DistinctIterable<String> dstIPs = utils.getDistinctValues("DstIP");
+        // DistinctIterable<String> srcIPs = utils.getDistinctValues("SrcIP", new Document("TPDetect", false));
+        // DistinctIterable<String> dstIPs = utils.getDistinctValues("DstIP", new Document("TPDetect", false));
+        HashSet<String> srcIPs = new HashSet<>(),
+                dstIPs = new HashSet<>();
+
+        List<Document> documents = utils.getFlowRecords(new Document("TPDetect", false));
+        for (Document doc : documents) {
+            Flow flow = Flow.parseDocument(doc);
+            HasDetect(doc.getObjectId("_id"));
+            srcIPs.add(flow.getsIP());
+            dstIPs.add(flow.getdIP());
+        }
 
         for (String ip : srcIPs) {
             TrafficPattern pattern = generatePattern(ip, 1);
             LocalStorage.source_based.put(ip, pattern);
-            storeIntoDb(ip, pattern);
         }
 
         for (String ip : dstIPs) {
             TrafficPattern pattern = generatePattern(ip, 2);
             LocalStorage.destination_based.put(ip, pattern);
-            storeIntoDb(ip, pattern);
         }
     }
 

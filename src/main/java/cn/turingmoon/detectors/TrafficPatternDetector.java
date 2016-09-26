@@ -255,6 +255,7 @@ public class TrafficPatternDetector {
             for (Map.Entry<String, TrafficPattern> item : LocalStorage.destination_based.entrySet()) {
                 detect(item.getKey(), item.getValue(), 2);
             }
+
         }, 2 * cycle, cycle, TimeUnit.SECONDS);
     }
 }

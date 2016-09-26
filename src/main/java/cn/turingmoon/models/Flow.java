@@ -125,6 +125,8 @@ public class Flow {
                 .append("DstPort", item.getdPort())
                 .append("Type", item.getType())
                 .append("PacketNum", item.getpNum())
-                .append("PacketSize", item.getpSize());
+                .append("PacketSize", item.getpSize())
+                .append("FHDetect", false)
+                .append("TPDetect", false);
     }
 }

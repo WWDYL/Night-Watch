@@ -10,6 +10,7 @@ import cn.turingmoon.utilities.RedisUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import redis.clients.jedis.Jedis;
 
 import java.util.Date;
@@ -58,6 +59,7 @@ public class FlowHeaderDetector {
     }
 
     private boolean isBroadcastAddr(String ip) {
+        /* TODO: implement the correct function. */
         return ip.equals(LocalStorage.BroadcastAddr);
     }
 
@@ -113,11 +115,16 @@ public class FlowHeaderDetector {
         }
     }
 
+    private void hasDetect(ObjectId id) {
+        MongoDbUtils utils = MongoDbUtils.getInstance();
+        utils.storeHasDetect(id, 1);
+    }
+
     public void run() {
         scheduExec.scheduleWithFixedDelay(() -> {
             logger.info("Start Flow Header Detection! ");
             MongoDbUtils utils = MongoDbUtils.getInstance();
-            List<Document> flows = utils.getFlowRecords(new Document());
+            List<Document> flows = utils.getFlowRecords(new Document("FHDetect", false));
             /*
              * TODO: add filter to reduce repeat work.
              * ORIGIN: gt("BeginTime", begin_time)
@@ -133,6 +140,7 @@ public class FlowHeaderDetector {
                 flows_sum++;
                 flows_psum += document.getInteger("PacketNum");
                 flows_psize += document.getInteger("PacketSize");
+                hasDetect(document.getObjectId("_id"));
             }
             for (Document document : flows) {
                 num++;
