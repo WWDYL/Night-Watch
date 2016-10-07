@@ -144,4 +144,22 @@ public class TrafficPattern {
     public void setACK_num(int ACK_num) {
         this.ACK_num = ACK_num;
     }
+
+    public static Document toDocument(TrafficPattern pattern) {
+        Document doc = new Document("BeginTime", pattern.getBeginTime())
+                .append("Duration", pattern.getDuration())
+                .append("FlowNum", pattern.getFlow_num())
+                .append("SrcIPNum", pattern.getSrcIP_num())
+                .append("DstIPNum", pattern.getSrcPort_num())
+                .append("SrcPortNum", pattern.getSrcPort_num())
+                .append("DstPortNum", pattern.getDstPort_num())
+                .append("Proto", pattern.getProto())
+                .append("FlowSizeSum", pattern.getFlow_size_sum())
+                .append("FlowSizeAvr", pattern.getFlow_size_avr())
+                .append("PacketNumSum", pattern.getPacket_num_sum())
+                .append("PacketNumAvr", pattern.getPacket_num_avr())
+                .append("SYNNum", pattern.getSYN_num())
+                .append("ACKNum", pattern.getACK_num());
+        return doc;
+    }
 }

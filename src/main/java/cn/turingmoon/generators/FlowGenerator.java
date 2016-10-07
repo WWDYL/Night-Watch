@@ -3,6 +3,8 @@ package cn.turingmoon.generators;
 import cn.turingmoon.LocalStorage;
 import cn.turingmoon.constants.FlowType;
 import cn.turingmoon.models.Flow;
+import cn.turingmoon.utilities.MongoDbUtils;
+import org.bson.Document;
 import org.jnetpcap.packet.JPacket;
 import org.jnetpcap.packet.format.FormatUtils;
 import org.jnetpcap.protocol.network.Icmp;
@@ -32,6 +34,10 @@ public class FlowGenerator {
     }
 
     void handlePacket(JPacket packet) {
+        if (LocalStorage.DEBUG) {
+            MongoDbUtils utils = MongoDbUtils.getInstance();
+            utils.storeOneRecord(new Document("Size", packet.getTotalSize() / 8));
+        }
         temp = new Flow();
         if (packet.hasHeader(ip4)) {
             ip4Handler(ip4);
@@ -120,12 +126,18 @@ public class FlowGenerator {
 //        System.out.printf("TCP: %s -> %s %b %b %b %b\n", srcPort, dstPort, ack, rst, syn, fin);
         temp.setsPort(srcPort);
         temp.setdPort(dstPort);
-        if (syn) {
-            temp.setType(FlowType.SYN);
-        } else if (fin) {
-            temp.setType(FlowType.FIN);
+        if (ack && syn) {
+            temp.setType(FlowType.SYNACK);
         } else {
-            temp.setType(FlowType.TCP);
+            if (ack) {
+                temp.setType(FlowType.ACK);
+            } else if (syn) {
+                temp.setType(FlowType.SYN);
+            } else if (fin) {
+                temp.setType(FlowType.FIN);
+            } else {
+                temp.setType(FlowType.TCP);
+            }
         }
     }
 

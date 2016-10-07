@@ -48,9 +48,8 @@ public class FlowHeaderDetector {
     }
 
     private boolean percentIsLarge(float num) {
-        /* TODO: get the normal percentage. */
         logger.info("Packet Size / Packet Num: {}", num);
-        return num > 1;
+        return num > 65536;
     }
 
     private boolean isReflectingPort(String sPort) {

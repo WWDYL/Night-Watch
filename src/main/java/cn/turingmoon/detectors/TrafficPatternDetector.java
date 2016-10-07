@@ -71,7 +71,7 @@ public class TrafficPatternDetector {
     }
 
     private boolean scanFuncIsLarge(double f_scan) {
-        return true;
+        return f_scan >= 1;
     }
 
     private boolean isSYNflooding(TrafficPattern pattern) {
@@ -96,7 +96,7 @@ public class TrafficPatternDetector {
     }
 
     private boolean SYNFuncisLarge(double f_syn) {
-        return true;
+        return f_syn > 6;
     }
 
     private void recordSrcAttack(String key, TrafficPattern tp, String type) {
@@ -185,22 +185,22 @@ public class TrafficPatternDetector {
 
     private boolean flowSizeSumIsLarge(int flow_size_sum) {
         logger.info("Flow Size Sum: {}", flow_size_sum);
-        return true;
+        return flow_size_sum > 100000;
     }
 
     private boolean packetNumSumIsLarge(int packet_num_sum) {
         logger.info("Packet Num Sum: {}", packet_num_sum);
-        return true;
+        return packet_num_sum > 200;
     }
 
     private boolean dstIpNumIsLarge(int dstIP_num) {
         logger.info("Dst Ip Num: {}", dstIP_num);
-        return true;
+        return dstIP_num > 10;
     }
 
     private boolean flowSizeAvgIsSmall(float flow_size_avr) {
         logger.info("Flow Size Avg: {}", flow_size_avr);
-        return true;
+        return flow_size_avr < 5000;
     }
 
     private boolean ACKDivSYNIsSmall(int ack, int syn) {
@@ -209,42 +209,46 @@ public class TrafficPatternDetector {
             return false;
         }
         logger.info("ACK / SYN: {}", (float)ack / syn);
-        return true;
+        return ((float)ack / syn) < 1;
     }
 
     private boolean dstPortNumIsSmall(int dstPort_num) {
         logger.info("Dst Port Num(S): {}", dstPort_num);
-        return true;
+        return dstPort_num <= 2;
     }
 
     private boolean srcIpNumIsSmall(int srcIP_num) {
         logger.info("Src Ip Num: {}", srcIP_num);
-        return true;
+        return srcIP_num > 10;
     }
 
     private boolean dstPortNumIsLarge(int dstPort_num) {
         logger.info("Dst Port Num(L): {}", dstPort_num);
-        return true;
+        return dstPort_num >= 20;
     }
 
     private boolean packetNumAvgIsSmall(float packet_num_avr) {
         logger.info("Packet Num Avg: {}", packet_num_avr);
-        return true;
+        return packet_num_avr <= 10;
     }
 
     private boolean flowNumIsLarge(int flow_num) {
         logger.info("Flow Num: {}", flow_num);
-        return true;
+        return flow_num > 100;
     }
 
     private boolean flowSizeAvrIsSmall(float flow_size_avr) {
         logger.info("Flow Size Avg: {}", flow_size_avr);
-        return true;
+        return flow_size_avr < 10000;
     }
 
 
     public void run() {
         scheduExec.scheduleWithFixedDelay(() -> {
+
+            LocalStorage.source_based.clear();
+            LocalStorage.destination_based.clear();
+
             TrafficPatternDataGenerator generator = new TrafficPatternDataGenerator();
             generator.run();
             logger.info("Start Traffic Pattern Detection! {} {}", LocalStorage.source_based.size(), LocalStorage.destination_based.size());

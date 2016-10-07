@@ -57,11 +57,13 @@ public class TrafficPatternDataGenerator {
             }
 
             flow_num++;
+
             if (type == 1) {
                 ips_stats.add(doc.getString("DstIP"));
             } else {
                 ips_stats.add(doc.getString("SrcIP"));
             }
+
             dport_stats.add(doc.getString("DstPort"));
             sport_stats.add(doc.getString("SrcPort"));
             if (ftype_stats.containsKey(doc.getString("Type"))) {
@@ -72,15 +74,17 @@ public class TrafficPatternDataGenerator {
             fs_sum += doc.getInteger("PacketSize");
             np_sum += doc.getInteger("PacketNum");
 
-            if (doc.getString("Type").equals(FlowType.SYN)) {
+            String ftype = doc.getString("Type");
+            if (ftype.equals(FlowType.SYN)
+                    || ftype.equals(FlowType.SYNACK)) {
                 syn_n++;
             }
 
-            if (doc.getString("Type").equals(FlowType.ACK)) {
+            if (ftype.equals(FlowType.ACK)
+                    || ftype.equals(FlowType.SYNACK)) {
                 ack_n++;
             }
         }
-
 
         during_time = (end_time.getTime() - begin_time.getTime()) / 1000;
 
@@ -127,11 +131,23 @@ public class TrafficPatternDataGenerator {
 
         pattern.setACK_num(ack_n);
         pattern.setSYN_num(syn_n);
+
+        if (type == 1) {
+            storeIntoDb(pattern, "Src:" + ip);
+        } else {
+            storeIntoDb(pattern, "Dst:" + ip);
+        }
         return pattern;
     }
 
-    private void HasDetect(ObjectId id) {
+    private void storeIntoDb(TrafficPattern tp, String ip) {
+        Document doc = TrafficPattern.toDocument(tp);
+        doc.append("IP", ip);
+        utils.storeTP(doc);
+    }
 
+    private void HasDetect(ObjectId id) {
+        utils.storeHasDetect(id, 2);
         // LocalStorage.source_based.put(ip, pattern);
     }
 
@@ -139,10 +155,12 @@ public class TrafficPatternDataGenerator {
 
         // DistinctIterable<String> srcIPs = utils.getDistinctValues("SrcIP", new Document("TPDetect", false));
         // DistinctIterable<String> dstIPs = utils.getDistinctValues("DstIP", new Document("TPDetect", false));
+
         HashSet<String> srcIPs = new HashSet<>(),
                 dstIPs = new HashSet<>();
 
         List<Document> documents = utils.getFlowRecords(new Document("TPDetect", false));
+
         for (Document doc : documents) {
             Flow flow = Flow.parseDocument(doc);
             HasDetect(doc.getObjectId("_id"));

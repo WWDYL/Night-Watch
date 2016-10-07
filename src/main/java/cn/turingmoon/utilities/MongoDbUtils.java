@@ -5,6 +5,8 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.DistinctIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.UpdateOptions;
+import com.mongodb.client.result.UpdateResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bson.Document;
@@ -17,6 +19,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.set;
+
 public class MongoDbUtils {
     private static MongoDbUtils mongoDbUtils;
 
@@ -24,6 +29,7 @@ public class MongoDbUtils {
 
     private MongoCollection<Document> traffic;
     private MongoCollection<Document> flows;
+    private MongoCollection<Document> tps;
 
     public static MongoDbUtils getInstance() {
         if (mongoDbUtils == null) {
@@ -45,25 +51,29 @@ public class MongoDbUtils {
     }
 
     private MongoDbUtils() {
-        MongoClient mongoClient = new MongoClient("localhost");
+        MongoClient mongoClient = new MongoClient();
         MongoDatabase mongoDatabase = mongoClient.getDatabase("mydb");
 
 //        String now_time = Long.toString(new Date().getTime());
         String now_time = RandomString(5);
         String traffic_db_name = "traffic" + now_time;
         String flows_db_name = "flows" + now_time;
+        String tp_db_name = "TP_" + now_time;
 
         logger.info("Traffic Collection Name: {}", traffic_db_name);
         logger.info("Flows Collection Name: {}", flows_db_name);
+        logger.info("TP Collection Name: {}", tp_db_name);
 
         LocalStorage.TRAFFIC_DB = traffic_db_name;
         LocalStorage.FLOWS_DB = flows_db_name;
 
         mongoDatabase.createCollection(traffic_db_name);
         mongoDatabase.createCollection(flows_db_name);
+        mongoDatabase.createCollection(tp_db_name);
 
         traffic = mongoDatabase.getCollection(traffic_db_name);
         flows = mongoDatabase.getCollection(flows_db_name);
+        tps = mongoDatabase.getCollection(tp_db_name);
     }
 
     public void storeOneRecord(Document doc) {
@@ -85,6 +95,10 @@ public class MongoDbUtils {
         return res;
     }
 
+    public void storeTP(Document doc) {
+        tps.insertOne(doc);
+    }
+
     public void storeHasDetect(ObjectId id, int type) {
         String key;
         if (type == 1) {
@@ -92,7 +106,7 @@ public class MongoDbUtils {
         } else {
             key = "TPDetect";
         }
-        flows.updateOne(new Document("_id", id), new Document(key, true));
+        UpdateResult result = flows.updateOne(eq("_id", id), set(key, true));
     }
 
     long getCount() {
