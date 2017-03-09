@@ -138,13 +138,14 @@ public class TrafficPatternDetector {
 
     public void detect(String key, TrafficPattern pattern, int type) {
         if (type == 2) {
+            if (isScanning(pattern, 2)) {
+                System.out.println("host scanning");
+                AttackRecorder.record(new AttackRecord(2, key, pattern, "host scanning"));
+            }
             if (flowNumIsLarge(pattern.getFlow_num()) && flowSizeAvrIsSmall(pattern.getFlow_size_avr()) && packetNumAvgIsSmall(pattern.getPacket_num_avr())) {
                 if (dstPortNumIsLarge(pattern.getDstPort_num()) && srcIpNumIsSmall(pattern.getSrcIP_num())) {
                     recordDstAttack(key, pattern, "host scanning");
-                    if (isScanning(pattern, 2)) {
-                        System.out.println("host scanning");
-                        AttackRecorder.record(new AttackRecord(2, key, pattern, "host scanning"));
-                    }
+
                 }
                 if (dstPortNumIsSmall(pattern.getDstPort_num()) && ACKDivSYNIsSmall(pattern.getACK_num(), pattern.getSYN_num())) {
                     System.out.println("TCP SYN flood");
@@ -154,30 +155,32 @@ public class TrafficPatternDetector {
             }
             if (packetNumSumIsLarge(pattern.getPacket_num_sum()) && flowSizeSumIsLarge(pattern.getFlow_size_sum())) {
                 System.out.println("(ICMP, UDP, TCP) flooding");
-                if (isSYNflooding(pattern)) {
-                    System.out.println("SYN flooding");
-                    AttackRecorder.record(new AttackRecord(2, key, pattern, "SYN flooding"));
-                }
                 recordDstAttack(key, pattern, "(ICMP UDP TCP) flooding");
             }
+            if (isSYNflooding(pattern)) {
+                System.out.println("SYN flooding");
+                AttackRecorder.record(new AttackRecord(2, key, pattern, "SYN flooding"));
+            }
         } else {
+            if (isScanning(pattern, 1)) {
+                System.out.println("network scanning");
+                AttackRecorder.record(new AttackRecord(1, key, pattern, "network scanning"));
+            }
+
+            if (isSYNflooding(pattern)) {
+                System.out.println("SYN flooding");
+                AttackRecorder.record(new AttackRecord(1, key, pattern, "SYN flooding"));
+            }
 
             if (flowNumIsLarge(pattern.getFlow_num()) && flowSizeAvgIsSmall(pattern.getFlow_size_avr()) && packetNumAvgIsSmall(pattern.getPacket_num_avr())) {
                 if (dstIpNumIsLarge(pattern.getDstIP_num()) && dstPortNumIsSmall(pattern.getDstPort_num())) {
                     recordSrcAttack(key, pattern, "network scanning");
-                    if (isScanning(pattern, 1)) {
-                        System.out.println("network scanning");
-                        AttackRecorder.record(new AttackRecord(1, key, pattern, "network scanning"));
-                    }
+
                 }
             }
 
             if (packetNumSumIsLarge(pattern.getPacket_num_sum()) && flowSizeSumIsLarge(pattern.getFlow_size_sum())) {
                 System.out.println("(ICMP, UDP, TCP) flooding");
-                if (isSYNflooding(pattern)) {
-                    System.out.println("SYN flooding");
-                    AttackRecorder.record(new AttackRecord(1, key, pattern, "SYN flooding"));
-                }
                 recordSrcAttack(key, pattern, "(ICMP UDP TCP) flooding");
             }
         }
@@ -208,8 +211,8 @@ public class TrafficPatternDetector {
             logger.info("ACK / SYN: NO SYN");
             return false;
         }
-        logger.info("ACK / SYN: {}", (float)ack / syn);
-        return ((float)ack / syn) < 1;
+        logger.info("ACK / SYN: {}", (float) ack / syn);
+        return ((float) ack / syn) < 1;
     }
 
     private boolean dstPortNumIsSmall(int dstPort_num) {
@@ -234,7 +237,7 @@ public class TrafficPatternDetector {
 
     private boolean flowNumIsLarge(int flow_num) {
         logger.info("Flow Num: {}", flow_num);
-        return flow_num > 100;
+        return flow_num > 10;
     }
 
     private boolean flowSizeAvrIsSmall(float flow_size_avr) {

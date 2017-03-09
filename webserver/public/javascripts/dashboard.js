@@ -3,23 +3,7 @@ $('#datetimepicker').datetimepicker({
 });
 
 $(function () {
-    $('#container').highcharts({
-        title: {
-            text: '攻击情况分析'
-        },
-        xAxis: {
-            categories: ['18：00', '19：00', '20：00', '21：00', '22：00']
-        },
-        labels: {
-            items: [{
-                html: 'Total',
-                style: {
-                    left: '50px',
-                    top: '18px',
-                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
-                }
-            }]
-        },
+    var options_old = {
         series: [{
             type: 'column',
             name: 'TCP Flood',
@@ -64,6 +48,42 @@ $(function () {
                 enabled: false
             }
         }]
+    };
+
+    var options = {
+        title: {
+            text: '攻击情况分析'
+        },
+        xAxis: {
+            categories: []
+        },
+        yAxis: {
+            title: {
+                text: '次数'
+            }
+        },
+        labels: {
+            items: [{
+                html: 'Total',
+                style: {
+                    left: '50px',
+                    top: '18px',
+                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+                }
+            }]
+        },
+        chart: {
+            renderTo: 'container',
+            defaultSeriesType: 'column'
+        },
+        series: [{}]
+    };
+
+
+    $.getJSON('/api/chart_data', function(data) {
+        options.xAxis.categories = data.cols;
+        options.series = data.series;
+        var chart = new Highcharts.Chart(options);
     });
 });
 //     function format(d) {

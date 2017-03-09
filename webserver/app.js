@@ -14,6 +14,7 @@ var attacks = require('./routes/attacks');
 var fhAttack = require('./routes/fh_attacks');
 var srcAttack = require('./routes/src_attacks');
 var dstAttack = require('./routes/dst_attacks');
+var chartData = require('./routes/chart_data');
 
 var app = express();
 
@@ -37,6 +38,7 @@ app.use("/api/attacks", attacks);
 app.use("/api/fh_attacks", fhAttack);
 app.use("/api/src_attacks", srcAttack);
 app.use("/api/dst_attacks", dstAttack);
+app.use("/api/chart_data", chartData);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

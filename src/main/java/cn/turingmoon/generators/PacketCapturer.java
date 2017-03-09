@@ -7,7 +7,6 @@ import org.jnetpcap.PcapIf;
 import org.jnetpcap.packet.PcapPacket;
 import org.jnetpcap.packet.PcapPacketHandler;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -51,7 +50,9 @@ public class PacketCapturer {
 
             int i = 0;
             for (PcapIf pcapIf : pcapIfs) {
-                System.out.printf("%d: %s %s\n", i++, pcapIf.getAddresses().get(0).getAddr(), pcapIf.getDescription());
+                boolean empty = false;
+                if (pcapIf.getAddresses().isEmpty()) empty = true;
+                System.out.printf("%d: %s %s\n", i++, empty ? "[]" : pcapIf.getAddresses().get(0).getAddr(), pcapIf.getDescription());
             }
 
 
